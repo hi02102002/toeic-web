@@ -26,6 +26,18 @@ module.exports = withTV({
             'accent-foreground':
                'rgb(var(--accent-foreground) / <alpha-value>)',
             bg: 'rgb(var(--bg) / <alpha-value>)',
+            foreground: 'rgb(var(--foreground) / <alpha-value>)',
+            input: 'rgb(var(--input)) / <alpha-value>)',
+            border: 'rgb(var(--border) / <alpha-value>)',
+            muted: 'rgb(var(--muted) / <alpha-value>)',
+            'muted-foreground': 'rgb(var(--muted-foreground) / <alpha-value>)',
+         },
+         spacing: {
+            sidebar: '13.75rem',
+            header: '3.75rem',
+         },
+         boxShadow: {
+            input: '0 0 0 2px',
          },
       },
    },

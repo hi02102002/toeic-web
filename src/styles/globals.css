@@ -8,12 +8,17 @@
    --background-end-rgb: 255, 255, 255;
 
    --bg: 255 255 255;
+   --foreground: 15 23 41;
    --primary: 39 39 42;
    --primary-foreground: 244 244 245;
    --secondary: 244 244 245;
    --secondary-foreground: 39 39 42;
    --accent: 228 228 231;
    --accent-foreground: 39 39 42;
+   --border: 245 245 245;
+   --input: 208 213 221;
+   --muted: 241 245 249;
+   --muted-foreground: 101 117 139;
 }
 
 @media (dark-mode: dark) {
@@ -24,5 +29,8 @@
    }
 }
 
-body {
+@layer base {
+   body {
+      @apply text-foreground bg-bg;
+   }
 }
