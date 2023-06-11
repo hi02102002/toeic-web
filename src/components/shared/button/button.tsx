@@ -14,7 +14,7 @@ const button = tv({
          outline:
             'bg-transparent hover:bg-accent text-accent-foreground/70 border-accent border-2',
          transparent:
-            'bg-transparent hover:bg-accent hover:text-accent-foreground',
+            'bg-transparent hover:bg-accent hover:text-accent-foreground/70',
       },
       sizes: {
          sm: 'h-9 px-4',

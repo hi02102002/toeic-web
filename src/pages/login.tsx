@@ -6,9 +6,10 @@ import {
    InputWrapper,
    Link,
 } from '@/components/shared';
-import { BASE_URL, URL_KEYS } from '@/constants';
+import { ROUTES } from '@/constants';
 import { auth } from '@/libs/firebase';
 import { TBaseResponse, TUser } from '@/types';
+import { withRoute } from '@/utils/withRoute';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
    IconBrandFacebook,
@@ -67,7 +68,7 @@ const Login = (props: Props) => {
             accessToken: string;
             refreshToken: string;
          }> = await axios
-            .post(`${BASE_URL}${URL_KEYS.LOGIN}`, values, {
+            .post('/api/login', values, {
                withCredentials: true,
             })
             .then((r) => r.data);
@@ -103,18 +104,21 @@ const Login = (props: Props) => {
             accessToken: string;
             refreshToken: string;
          }> = await axios
-            .post(`${BASE_URL}${URL_KEYS.LOGIN_SOCIAL}`, dto, {
+            .post('/api/login-social', dto, {
                withCredentials: true,
             })
             .then((r) => r.data);
          toast.success(message);
          setIsLoading(false);
-         router.push('/');
+         router.push(ROUTES.HOME);
       } catch (error: any) {
          toast.error(
             error?.response?.data?.message ||
                'Something went wrong. Please try again.'
          );
+         await auth.signOut().then(() => {
+            console.log('logout');
+         });
          setIsLoading(false);
       }
    };
@@ -126,7 +130,7 @@ const Login = (props: Props) => {
             className="absolute top-4 left-4"
             variants="transparent"
             onClick={() => {
-               router.push('/');
+               router.push(ROUTES.HOME);
             }}
          >
             Back
@@ -172,7 +176,10 @@ const Login = (props: Props) => {
                            </InputMessage>
                         )}
                      </InputWrapper>
-                     <Link href="/" className="self-end text-sm">
+                     <Link
+                        href={ROUTES.FORGOT_PASSWORD}
+                        className="self-end text-sm"
+                     >
                         Forgot your password?
                      </Link>
                      <Button
@@ -204,7 +211,7 @@ const Login = (props: Props) => {
                         }
                         isLoading={isLoading}
                      >
-                        Login with Google
+                        Continue with Google
                      </Button>
                      <Button
                         leftIcon={<IconBrandFacebook className="w-5 h-5" />}
@@ -216,11 +223,11 @@ const Login = (props: Props) => {
                         }
                         isLoading={isLoading}
                      >
-                        Login with Facebook
+                        Continue with Facebook
                      </Button>
                   </div>
-                  <Link href="/" className="text-sm text-center">
-                     Don&lsquo;t have an account? Sign Up
+                  <Link href={ROUTES.REGISTER} className="text-sm text-center">
+                     Don&lsquo;t have an account? Register
                   </Link>
                </div>
             </div>
@@ -228,5 +235,9 @@ const Login = (props: Props) => {
       </div>
    );
 };
+
+export const getServerSideProps = withRoute({
+   isProtected: false,
+})();
 
 export default Login;

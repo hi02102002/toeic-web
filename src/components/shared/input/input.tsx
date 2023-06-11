@@ -40,7 +40,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
                   'pr-9': isPassword,
                })}
                {...props}
-               type={isPassword && isShowPass ? 'password' : 'text'}
+               type={isPassword && !isShowPass ? 'password' : 'text'}
                ref={ref}
             />
             {isPassword && (
