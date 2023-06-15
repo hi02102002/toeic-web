@@ -1,6 +1,6 @@
-import { BASE_URL, URL_KEYS } from '@/constants';
+import { BASE_URL } from '@/constants';
 import { TBaseResponse } from '@/types';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -19,7 +19,7 @@ export default async function handler(
             accessToken: string;
             refreshToken: string;
          }> = await axios
-            .post(`${BASE_URL}${URL_KEYS.LOGIN}`, {
+            .post(`${BASE_URL}/auth/login`, {
                email,
                password,
             })
@@ -44,6 +44,11 @@ export default async function handler(
 
       return res.status(405).json({ message: 'Method not allowed' });
    } catch (error) {
+      if (error instanceof AxiosError) {
+         return res.status(error.response?.status || 500).json({
+            message: error.response?.data.message || 'Internal server error',
+         });
+      }
       return res.status(500).json({ message: 'Internal server error' });
    }
 }

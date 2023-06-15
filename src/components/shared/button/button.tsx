@@ -3,7 +3,7 @@ import { IconLoader2 } from '@tabler/icons-react';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
-const button = tv({
+export const button = tv({
    base: 'outline-0 focus:outline-0 active:outline-0 border-0 rounded transition-all font-medium flex items-center justify-center',
    variants: {
       variants: {
@@ -15,6 +15,7 @@ const button = tv({
             'bg-transparent hover:bg-accent text-accent-foreground/70 border-accent border-2',
          transparent:
             'bg-transparent hover:bg-accent hover:text-accent-foreground/70',
+         danger: 'bg-red-500 hover:bg-red-500/90 text-white',
       },
       sizes: {
          sm: 'h-9 px-4',
@@ -25,17 +26,16 @@ const button = tv({
          true: 'opacity-70 pointer-events-none select-none',
       },
    },
-   defaultVariants: {
-      sizes: 'md',
-      variants: 'primary',
-   },
    compoundVariants: [
       {
-         disabled: true,
+         disabled: 'true',
          variants: 'outline',
          className: 'bg-accent text-accent-foreground',
       },
    ],
+   defaultVariants: {
+      sizes: 'md',
+   },
 });
 
 type Props = {

@@ -4,7 +4,7 @@ import { HtmlHTMLAttributes, forwardRef, useState } from 'react';
 import { VariantProps, tv } from 'tailwind-variants';
 
 const avatar = tv({
-   base: 'rounded-full object-cover overflow-hidden relative aspect-square ',
+   base: 'rounded-full object-cover overflow-hidden relative aspect-square select-none',
    variants: {
       sizes: {
          sm: 'h-8 w-8',
@@ -35,6 +35,7 @@ const Avatar = forwardRef<HTMLDivElement, Props>(
             className={cn(avatar({ sizes, noUrl: !url || error }), className)}
             {...props}
             ref={ref}
+            title={alt}
          >
             {url && !error ? (
                <Image

@@ -1,14 +1,3 @@
-export const URL_KEYS = {
-   LOGIN: '/auth/login',
-   REGISTER: '/auth/register',
-   LOGIN_SOCIAL: '/auth/login/social',
-   FORGOT_PASSWORD: '/auth/forgot-password',
-   RESET_PASSWORD: '/auth/reset-password',
-   REFRESH_TOKEN: '/auth/refresh-token',
-   LOGOUT: '/auth/logout',
-   ME: '/auth/me',
-};
-
 export const BASE_URL = 'http://localhost:4000';
 
 export const ROUTES = {
@@ -17,4 +6,26 @@ export const ROUTES = {
    REGISTER: '/register',
    FORGOT_PASSWORD: '/forgot-password',
    RESET_PASSWORD: '/reset-password',
+   PROFILE: '/profile',
+   NOT_FOUND: '/404',
+   SERVER_ERROR: '/500',
+   DASHBOARD: '/dashboard',
+   TOIEC_TEST: '/toiec-test',
+   VOCABULARY: '/vocabulary',
+   GRAMMAR: '/grammar',
+   SETTINGS: '/settings',
+   BLOGS: '/blogs',
+   ADMIN: '/admin',
+   ADMIN_USERS: '/admin/users',
+   ADMIN_TESTS: '/admin/tests',
+   ADMIN_BLOGS: '/admin/blogs',
+   ADMIN_WORDS: '/admin/words',
+   ADMIN_GRAMMARS: '/admin/grammars',
 };
+
+export const ROUTES_AUTH = [
+   ROUTES.LOGIN,
+   ROUTES.REGISTER,
+   ROUTES.FORGOT_PASSWORD,
+   ROUTES.RESET_PASSWORD,
+];

@@ -31,6 +31,9 @@ module.exports = withTV({
             border: 'rgb(var(--border) / <alpha-value>)',
             muted: 'rgb(var(--muted) / <alpha-value>)',
             'muted-foreground': 'rgb(var(--muted-foreground) / <alpha-value>)',
+            popover: 'rgb(var(--popover) / <alpha-value>)',
+            'popover-foreground':
+               'rgb(var(--popover-foreground) / <alpha-value>)',
          },
          spacing: {
             sidebar: '13.75rem',
@@ -41,5 +44,19 @@ module.exports = withTV({
          },
       },
    },
-   plugins: [],
+   plugins: [
+      function ({ addComponents }) {
+         addComponents({
+            '.container': {
+               maxWidth: '1232px',
+               padding: '0 1rem',
+               margin: '0 auto',
+               width: '100%',
+            },
+         });
+      },
+   ],
+   corePlugins: {
+      container: false,
+   },
 });

@@ -1,7 +1,7 @@
-import { ROUTES, URL_KEYS } from '@/constants';
+import { ROUTES, ROUTES_AUTH } from '@/constants';
 import { http_server } from '@/libs/axios';
 import { Role, TUser } from '@/types';
-import { getCookies } from 'cookies-next';
+import { getCookies, setCookie } from 'cookies-next';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 type Options = {
    isProtected?: boolean;
@@ -21,28 +21,32 @@ export type WithRoute<
    }) => Promise<GetServerSidePropsResult<T>>
 ) => (ctx: GetServerSidePropsContext) => Promise<GetServerSidePropsResult<T>>;
 
-const ROUTES_AUTH = [
-   ROUTES.LOGIN,
-   ROUTES.REGISTER,
-   ROUTES.FORGOT_PASSWORD,
-   ROUTES.RESET_PASSWORD,
-];
-
 export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
    const { req, res } = ctx;
+
+   const prevPath = req.headers.referer || ROUTES.DASHBOARD;
 
    let { access_token, refresh_token } = getCookies({
       req,
       res,
    });
 
-   if ((!access_token || !refresh_token) && options?.isProtected) {
+   setCookie('prevPath', prevPath, {
+      res,
+      req,
+   });
+
+   const handleNavigateLogin = () => {
       return {
          redirect: {
             destination: ROUTES.LOGIN,
             permanent: false,
          },
       };
+   };
+
+   if ((!access_token || !refresh_token) && options?.isProtected) {
+      return handleNavigateLogin();
    }
 
    const user = await http_server<TUser>(
@@ -50,24 +54,19 @@ export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
          accessToken: access_token as string,
          refreshToken: refresh_token as string,
       },
-      URL_KEYS.ME
+      '/auth/me'
    )
       .then((r) => r?.data)
       .catch(() => null);
 
    if (!user && options?.isProtected) {
-      return {
-         redirect: {
-            destination: ROUTES.LOGIN,
-            permanent: false,
-         },
-      };
+      return handleNavigateLogin();
    }
 
-   if (user && ROUTES_AUTH.includes(ctx.resolvedUrl)) {
+   if (user && ROUTES_AUTH.some((r) => ctx.resolvedUrl.includes(r))) {
       return {
          redirect: {
-            destination: ROUTES.HOME,
+            destination: ROUTES.DASHBOARD,
             permanent: false,
          },
       };
@@ -76,7 +75,7 @@ export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
    if (user && options?.onlyAdmin && user.role !== Role.ADMIN) {
       return {
          redirect: {
-            destination: ROUTES.HOME,
+            destination: ROUTES.DASHBOARD,
             permanent: false,
          },
       };

@@ -24,8 +24,7 @@ const input = tv({
    },
 });
 
-type Props = {} & InputHTMLAttributes<HTMLInputElement> &
-   VariantProps<typeof input>;
+type Props = InputHTMLAttributes<HTMLInputElement> & VariantProps<typeof input>;
 
 const Input = forwardRef<HTMLInputElement, Props>(
    ({ className, sizes, type, error, ...props }: Props, ref) => {
@@ -42,6 +41,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
                {...props}
                type={isPassword && !isShowPass ? 'password' : 'text'}
                ref={ref}
+               autoComplete="off"
             />
             {isPassword && (
                <div
@@ -113,4 +113,4 @@ const InputMessage = ({
 
 Input.displayName = 'Input';
 
-export { InputLabel, InputMessage, InputWrapper, Input };
+export { Input, InputLabel, InputMessage, InputWrapper };

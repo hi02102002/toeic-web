@@ -18,6 +18,7 @@ import {
    IconChevronLeft,
 } from '@tabler/icons-react';
 import axios from 'axios';
+import { getCookie } from 'cookies-next';
 import {
    AuthProvider,
    FacebookAuthProvider,
@@ -59,10 +60,11 @@ const Login = (props: Props) => {
 
    const handelLogin = async (values: FormValues) => {
       try {
+         const prevPath = getCookie('prevPath');
+
          setIsLoading(true);
 
          const {
-            data,
             message,
          }: TBaseResponse<{
             accessToken: string;
@@ -74,7 +76,7 @@ const Login = (props: Props) => {
             .then((r) => r.data);
          toast.success(message);
          setIsLoading(false);
-         router.push('/');
+         router.push((prevPath as string) || ROUTES.DASHBOARD);
       } catch (error: any) {
          toast.error(
             error?.response?.data?.message ||
@@ -98,7 +100,6 @@ const Login = (props: Props) => {
          };
 
          const {
-            data,
             message,
          }: TBaseResponse<{
             accessToken: string;

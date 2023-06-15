@@ -1,7 +1,7 @@
-import { BASE_URL, URL_KEYS } from '@/constants';
+import { BASE_URL } from '@/constants';
 import { TBaseResponse } from '@/types';
-import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import axios, { AxiosError } from 'axios';
+import { deleteCookie, setCookie } from 'cookies-next';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -20,7 +20,7 @@ export default async function handler(
             refreshToken: string;
          }> = await axios
             .post(
-               `${BASE_URL}${URL_KEYS.REFRESH_TOKEN}`,
+               `${BASE_URL}/auth/refresh-token`,
                {},
                {
                   headers: {
@@ -48,7 +48,15 @@ export default async function handler(
       }
 
       return res.status(405).json({ message: 'Method not allowed' });
-   } catch (error) {
+   } catch (error: any) {
+      deleteCookie('access_token', { req, res });
+      deleteCookie('refresh_token', { req, res });
+
+      if (error instanceof AxiosError) {
+         return res.status(error.response?.status || 500).json({
+            message: error.response?.data.message || 'Internal server error',
+         });
+      }
       return res.status(500).json({ message: 'Internal server error' });
    }
 }
