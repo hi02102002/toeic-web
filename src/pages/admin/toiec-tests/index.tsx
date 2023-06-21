@@ -16,26 +16,18 @@ import {
    Input,
    LoadingFullPage,
 } from '@/components/shared';
-import {
-   DataTablePagination,
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableHeader,
-   TableRow,
-} from '@/components/shared/table';
+import { DataTable } from '@/components/shared/table';
 import { useCreateTest, useTests, useUpdateTest } from '@/hooks';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useRemoveTests } from '@/hooks/use-remove-tests';
 import { NextPageWithLayout, TTest } from '@/types';
+import { calcPageCount } from '@/utils';
 import { withRoute } from '@/utils/withRoute';
 import {
    IconBook2,
    IconBrandGooglePodcasts,
    IconDots,
    IconEdit,
-   IconLoader2,
    IconPlus,
    IconTrash,
    IconX,
@@ -43,10 +35,10 @@ import {
 import {
    ColumnDef,
    PaginationState,
-   flexRender,
    getCoreRowModel,
    useReactTable,
 } from '@tanstack/react-table';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -135,9 +127,11 @@ const Tests: NextPageWithLayout = () => {
                            <DropdownMenuSubContent>
                               {parts.map((part) => {
                                  return (
-                                    <DropdownMenuItem key={part.id}>
-                                       <IconBook2 className="w-4 h-4 mr-2" />
-                                       {part.name}
+                                    <DropdownMenuItem key={part.id} asChild>
+                                       <Link href={`/admin/parts/${part.id}`}>
+                                          <IconBook2 className="w-4 h-4 mr-2" />
+                                          {part.name}
+                                       </Link>
                                     </DropdownMenuItem>
                                  );
                               })}
@@ -221,7 +215,7 @@ const Tests: NextPageWithLayout = () => {
 
          query.name = name ? name.toString() : undefined;
 
-         router.push({
+         router.replace({
             pathname: router.pathname,
             query,
          });
@@ -237,8 +231,6 @@ const Tests: NextPageWithLayout = () => {
       [pageIndex, pageSize]
    );
 
-   console.log(rowSelection);
-
    const table = useReactTable({
       data: data?.tests || [],
       columns,
@@ -247,7 +239,7 @@ const Tests: NextPageWithLayout = () => {
          pagination,
          rowSelection,
       },
-      pageCount: data?.total ? Math.ceil(data?.total / pageSize) : 0,
+      pageCount: calcPageCount(data?.total || 0, pageSize),
       onPaginationChange: setPagination,
       manualPagination: true,
       enableRowSelection: true,
@@ -309,71 +301,13 @@ const Tests: NextPageWithLayout = () => {
                      </Button>
                   </CreateUpdateTest>
                </div>
-               <Table className="relative p-4 border rounded border-border">
-                  <TableHeader>
-                     {table.getHeaderGroups().map((headerGroup) => {
-                        return (
-                           <TableRow key={headerGroup.id}>
-                              {headerGroup.headers.map((header) => {
-                                 return (
-                                    <TableHead key={header.id}>
-                                       {header.isPlaceholder
-                                          ? null
-                                          : flexRender(
-                                               header.column.columnDef.header,
-                                               header.getContext()
-                                            )}
-                                    </TableHead>
-                                 );
-                              })}
-                           </TableRow>
-                        );
-                     })}
-                  </TableHeader>
-                  <TableBody className="relative">
-                     {isLoading ? (
-                        <TableRow>
-                           <TableCell
-                              colSpan={columns.length}
-                              className="h-24 text-center"
-                           >
-                              <IconLoader2 className="w-6 h-6 mx-auto animate-spin text-primary" />
-                           </TableCell>
-                        </TableRow>
-                     ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                           <TableRow
-                              key={row.id}
-                              data-state={row.getIsSelected() && 'selected'}
-                           >
-                              {row.getVisibleCells().map((cell) => (
-                                 <TableCell key={cell.id}>
-                                    {flexRender(
-                                       cell.column.columnDef.cell,
-                                       cell.getContext()
-                                    )}
-                                 </TableCell>
-                              ))}
-                           </TableRow>
-                        ))
-                     ) : (
-                        <TableRow>
-                           <TableCell
-                              colSpan={columns.length}
-                              className="h-24 text-center"
-                           >
-                              No results.
-                           </TableCell>
-                        </TableRow>
-                     )}
-                  </TableBody>
-               </Table>
-               <DataTablePagination
+               <DataTable
                   table={table}
                   onRemoveSelectedRows={async (close) => {
                      await handleRemoveTests(rowSelection);
                      close?.();
                   }}
+                  isLoading={isLoading}
                />
             </div>
          </div>

@@ -31,8 +31,8 @@ const NAV_LINKS = [
       href: ROUTES.ADMIN_USERS,
    },
    {
-      label: 'Tests',
-      href: ROUTES.ADMIN_TESTS,
+      label: 'Toiec Tests',
+      href: ROUTES.ADMIN_TOIEC_TESTS,
    },
    {
       label: 'Words',

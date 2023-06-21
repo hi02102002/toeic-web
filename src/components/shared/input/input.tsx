@@ -33,13 +33,13 @@ const Input = forwardRef<HTMLInputElement, Props>(
       const [isShowPass, { onToggle: onToggleShowPass }] = useDisclosure();
 
       return (
-         <div className="relative">
+         <div className="relative flex items-center w-full">
             <input
                className={cn(input({ sizes, error }), className, {
                   'pr-9': isPassword,
                })}
                {...props}
-               type={isPassword && !isShowPass ? 'password' : 'text'}
+               type={isPassword ? (!isShowPass ? 'password' : 'text') : type}
                ref={ref}
                autoComplete="off"
             />
@@ -60,13 +60,32 @@ const Input = forwardRef<HTMLInputElement, Props>(
    }
 );
 
+const TextArea = forwardRef<
+   HTMLTextAreaElement,
+   InputHTMLAttributes<HTMLTextAreaElement>
+>(({ className, ...props }, ref) => {
+   return (
+      <textarea
+         className={cn(
+            'px-3 py-2 rounded border-2 border-input placeholder:text-muted-foreground w-full placeholder:leading-none relative transition-all',
+            'focus:border-primary outline-0 h-32',
+            className
+         )}
+         {...props}
+         ref={ref}
+      />
+   );
+});
+
+TextArea.displayName = 'TextArea';
+
 const InputWrapper = ({
    className,
    children,
    ...props
 }: HtmlHTMLAttributes<HTMLDivElement>) => {
    return (
-      <div className={cn('space-y-1', className)} {...props}>
+      <div className={cn('space-y-2 flex flex-col', className)} {...props}>
          {children}
       </div>
    );
@@ -113,4 +132,4 @@ const InputMessage = ({
 
 Input.displayName = 'Input';
 
-export { Input, InputLabel, InputMessage, InputWrapper };
+export { Input, InputLabel, InputMessage, InputWrapper, TextArea };

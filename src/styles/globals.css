@@ -36,3 +36,7 @@
       @apply text-foreground bg-bg;
    }
 }
+
+.ProseMirror {
+   @apply focus-within:outline-none focus-within:border-none;
+}

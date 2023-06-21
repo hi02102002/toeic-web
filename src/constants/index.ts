@@ -10,17 +10,18 @@ export const ROUTES = {
    NOT_FOUND: '/404',
    SERVER_ERROR: '/500',
    DASHBOARD: '/dashboard',
-   TOIEC_TEST: '/toiec-test',
+   TOIEC_TEST: '/toiec-tests',
    VOCABULARY: '/vocabulary',
    GRAMMAR: '/grammar',
    SETTINGS: '/settings',
    BLOGS: '/blogs',
    ADMIN: '/admin',
    ADMIN_USERS: '/admin/users',
-   ADMIN_TESTS: '/admin/tests',
+   ADMIN_TOIEC_TESTS: '/admin/toiec-tests',
    ADMIN_BLOGS: '/admin/blogs',
    ADMIN_WORDS: '/admin/words',
    ADMIN_GRAMMARS: '/admin/grammars',
+   ADMIN_CHILDREN_QUESTIONS: '/admin/children-questions',
 };
 
 export const ROUTES_AUTH = [

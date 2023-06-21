@@ -1,14 +1,14 @@
 import { http } from '@/libs/axios';
-import { TBaseResponse, TTest, TTestQuery } from '@/types';
+import { TBaseResponse, TPart, TTest, TTestQuery } from '@/types';
 
 class TestsService {
-   async createTest(name: string): Promise<TBaseResponse<TTest>> {
+   createTest(name: string): Promise<TBaseResponse<TTest>> {
       return http.post('/tests', {
          name,
       });
    }
 
-   async removeTests(ids: string[]) {
+   removeTests(ids: string[]) {
       return http.delete('/tests', {
          data: {
             ids,
@@ -16,7 +16,7 @@ class TestsService {
       });
    }
 
-   async updateTest(id: string, name: string): Promise<TBaseResponse<TTest>> {
+   updateTest(id: string, name: string): Promise<TBaseResponse<TTest>> {
       return http.patch(`/tests/${id}`, {
          name,
       });
@@ -35,6 +35,16 @@ class TestsService {
             limit: Number(q?.limit || 5),
          },
       });
+   }
+
+   getPartById(id: string): Promise<
+      TBaseResponse<
+         TPart & {
+            test: Pick<TTest, 'id' | 'name'>;
+         }
+      >
+   > {
+      return http.get(`/tests/parts/${id}`);
    }
 }
 

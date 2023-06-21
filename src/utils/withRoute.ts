@@ -1,7 +1,7 @@
 import { ROUTES, ROUTES_AUTH } from '@/constants';
 import { http_server } from '@/libs/axios';
 import { Role, TUser } from '@/types';
-import { getCookies, setCookie } from 'cookies-next';
+import { deleteCookie, getCookies, setCookie } from 'cookies-next';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 type Options = {
    isProtected?: boolean;
@@ -46,6 +46,14 @@ export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
    };
 
    if ((!access_token || !refresh_token) && options?.isProtected) {
+      deleteCookie('access_token', {
+         res,
+         req,
+      });
+      deleteCookie('refresh_token', {
+         res,
+         req,
+      });
       return handleNavigateLogin();
    }
 

@@ -55,6 +55,7 @@ module.exports = withTV({
             },
          });
       },
+      require('@tailwindcss/typography'),
    ],
    corePlugins: {
       container: false,

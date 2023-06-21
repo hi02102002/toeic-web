@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 export const button = tv({
-   base: 'outline-0 focus:outline-0 active:outline-0 border-0 rounded transition-all font-medium flex items-center justify-center',
+   base: 'outline-0 focus:outline-0 active:outline-0 border-0 rounded transition-[background-color] font-medium flex items-center justify-center',
    variants: {
       variants: {
          default: '',

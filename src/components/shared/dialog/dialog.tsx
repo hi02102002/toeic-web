@@ -29,7 +29,7 @@ const DialogOverlay = React.forwardRef<
    <DialogPrimitive.Overlay
       ref={ref}
       className={cn(
-         'fixed inset-0 z-50 bg-black/70 transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in',
+         'fixed inset-0 z-50 bg-black/70 transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in overflow-y-auto grid place-items-center p-4',
          className
       )}
       {...props}
@@ -39,24 +39,32 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
    React.ElementRef<typeof DialogPrimitive.Content>,
-   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+      classNameClose?: string;
+   }
+>(({ className, children, classNameClose, ...props }, ref) => (
    <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Content
-         ref={ref}
-         className={cn(
-            'fixed z-50 grid w-full gap-4 rounded-b border bg-bg p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg sm:rounded sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
-            className
-         )}
-         {...props}
-      >
-         {children}
-         <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            <IconX className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-         </DialogPrimitive.Close>
-      </DialogPrimitive.Content>
+      <DialogOverlay>
+         <DialogPrimitive.Content
+            ref={ref}
+            className={cn(
+               'relative z-50 grid w-full gap-4 rounded-b border bg-bg p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg sm:rounded sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
+               className
+            )}
+            {...props}
+         >
+            {children}
+            <DialogPrimitive.Close
+               className={cn(
+                  'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground',
+                  classNameClose
+               )}
+            >
+               <IconX className="w-4 h-4" />
+               <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+         </DialogPrimitive.Content>
+      </DialogOverlay>
    </DialogPortal>
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
@@ -118,10 +126,10 @@ DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
    Dialog,
-   DialogTrigger,
    DialogContent,
-   DialogHeader,
-   DialogFooter,
-   DialogTitle,
    DialogDescription,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger,
 };
