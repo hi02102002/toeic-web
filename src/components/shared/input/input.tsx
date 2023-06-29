@@ -24,16 +24,27 @@ const input = tv({
    },
 });
 
-type Props = InputHTMLAttributes<HTMLInputElement> & VariantProps<typeof input>;
+type Props = InputHTMLAttributes<HTMLInputElement> &
+   VariantProps<typeof input> & {
+      classNameContainer?: string;
+   };
 
 const Input = forwardRef<HTMLInputElement, Props>(
-   ({ className, sizes, type, error, ...props }: Props, ref) => {
+   (
+      { classNameContainer, className, sizes, type, error, ...props }: Props,
+      ref
+   ) => {
       const isPassword = type === 'password';
 
       const [isShowPass, { onToggle: onToggleShowPass }] = useDisclosure();
 
       return (
-         <div className="relative flex items-center w-full">
+         <div
+            className={cn(
+               'relative flex items-center w-full',
+               classNameContainer
+            )}
+         >
             <input
                className={cn(input({ sizes, error }), className, {
                   'pr-9': isPassword,

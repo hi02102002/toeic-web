@@ -127,7 +127,7 @@ const AppHeader = () => {
                                     {user.email}
                                  </span>
                               </div>
-                              {user.role === Role.ADMIN && (
+                              {user.roles.some((r) => r === Role.ADMIN) && (
                                  <DropdownMenuItem
                                     className="font-medium"
                                     onClick={() => handleNavigate(ROUTES.ADMIN)}

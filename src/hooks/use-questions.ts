@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useQuestions = (q?: TQuestionQuery) => {
    return useQuery({
-      queryKey: ['questions', q],
+      queryKey: ['questions', JSON.stringify(q)],
       queryFn: async () => {
          const res = await questionService.getQuestions(q);
 

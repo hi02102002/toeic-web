@@ -7,6 +7,7 @@ import {
    SelectTrigger,
    SelectValue,
 } from '@/components/shared';
+import { cn } from '@/utils';
 import {
    IconChevronLeft,
    IconChevronRight,
@@ -18,33 +19,41 @@ interface DataTablePaginationProps<TData> {
    table: Table<TData>;
    pageSizes?: number[];
    onRemoveSelectedRows?: (close?: () => void) => void;
+   showSelect?: Boolean;
 }
 
 export function DataTablePagination<TData>({
    table,
    pageSizes = [5, 10, 15],
    onRemoveSelectedRows,
+   showSelect = true,
 }: DataTablePaginationProps<TData>) {
    return (
       <div className="flex items-center justify-between px-2">
-         <div className="flex items-center gap-2">
-            <div className="flex-1 text-sm text-muted-foreground">
-               {table.getFilteredSelectedRowModel().rows.length} of{' '}
-               {table.getFilteredRowModel().rows.length} row(s) selected.
+         {showSelect && (
+            <div className="flex items-center gap-2">
+               <div className="flex-1 text-sm text-muted-foreground">
+                  {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                  {table.getFilteredRowModel().rows.length} row(s) selected.
+               </div>
+               {table.getFilteredSelectedRowModel().rows.length > 0 && (
+                  <Confirm
+                     title="Remove selected rows?"
+                     description="Are you sure you want to remove the selected rows? This action cannot be undone."
+                     onConfirm={onRemoveSelectedRows}
+                  >
+                     <span className="text-sm text-red-500 underline cursor-pointer underline-offset-2">
+                        Remove selected rows
+                     </span>
+                  </Confirm>
+               )}
             </div>
-            {table.getFilteredSelectedRowModel().rows.length > 0 && (
-               <Confirm
-                  title="Remove selected rows?"
-                  description="Are you sure you want to remove the selected rows? This action cannot be undone."
-                  onConfirm={onRemoveSelectedRows}
-               >
-                  <span className="text-sm text-red-500 underline cursor-pointer underline-offset-2">
-                     Remove selected rows
-                  </span>
-               </Confirm>
-            )}
-         </div>
-         <div className="flex items-center space-x-6 lg:space-x-8">
+         )}
+         <div
+            className={cn('flex items-center space-x-6 lg:space-x-8', {
+               'ml-auto': !showSelect,
+            })}
+         >
             <div className="flex items-center space-x-2">
                <p className="text-sm font-medium">Rows per page</p>
                <Select

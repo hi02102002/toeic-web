@@ -7,6 +7,11 @@ export enum Role {
    USER = 'USER',
 }
 
+export enum UserStatus {
+   BLOCKED = 'BLOCKED',
+   ACTIVE = 'ACTIVE',
+}
+
 export enum PartType {
    PART1 = 'PART1',
    PART2 = 'PART2',
@@ -26,7 +31,8 @@ export type TUser = {
    updatedAt?: Date;
    avatar: string | null;
    provider: string;
-   role: Role;
+   roles: string[];
+   status: UserStatus;
 };
 
 export type TTest = {
@@ -136,7 +142,7 @@ export type TQuestionDto = {
    parentId?: string | null;
    explain?: string;
    transcript?: string;
-   partType: keyof typeof PartType | PartType;
+   partType?: keyof typeof PartType | PartType;
    answers?: Array<Pick<TAnswer, 'isCorrect' | 'content'>>;
    grammarId?: string | null;
    nationalTestId?: string | null;
@@ -148,4 +154,31 @@ export type TQuestionQuery = Partial<{
    limit: number;
    partId: string;
    parentId: string;
+   grammarId: string;
+}>;
+
+export type TGrammarQuery = Partial<{
+   page: number;
+   limit: number;
+   name: string;
+}>;
+
+export type TGrammar = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   theory: string;
+   questions: TQuestion[];
+   name: string;
+};
+
+export type TGrammarDto = Pick<TGrammar, 'theory' | 'name'>;
+
+export type TUserDto = Pick<TUser, 'avatar' | 'name' | 'status'>;
+
+export type TUserQuery = Partial<{
+   page: number;
+   status: UserStatus | 'ALL';
+   limit: number;
+   name: string;
 }>;

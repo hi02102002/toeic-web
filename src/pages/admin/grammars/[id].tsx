@@ -11,51 +11,68 @@ import {
    LoadingFullPage,
 } from '@/components/shared';
 import { DataTable } from '@/components/shared/table';
-import { useCreateQuestion, useQuestion, useQuestions } from '@/hooks';
+import {
+   useCreateQuestion,
+   useGrammar,
+   useQuestions,
+   useRemoveQuestions,
+} from '@/hooks';
 import { useUpdateQuestion } from '@/hooks/use-update-question';
 import { http_server } from '@/libs/axios';
-import { NextPageWithLayout, PartType, TQuestion } from '@/types';
+import {
+   NextPageWithLayout,
+   TGrammar,
+   TQuestion,
+   TQuestionQuery,
+} from '@/types';
+import { calcPageCount } from '@/utils';
 import { tableQuestionColumns } from '@/utils/table';
 import { withRoute } from '@/utils/withRoute';
 import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 import {
    ColumnDef,
+   PaginationState,
    getCoreRowModel,
    useReactTable,
 } from '@tanstack/react-table';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type Props = {
-   question: TQuestion;
+   grammar: TGrammar;
 };
 
-const ChildrenQuestions: NextPageWithLayout<Props> = ({
-   question: initQuestion,
-}) => {
+const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
    const router = useRouter();
-   const { data: question } = useQuestion(
-      router.query.id as string,
-      initQuestion
-   );
-
-   const { data } = useQuestions({
-      parentId: router.query.id as string,
+   const { data: grammar } = useGrammar(router.query.id as string, initGrammar);
+   const [rowSelection, setRowSelection] = useState({});
+   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 5,
    });
+
+   const q: TQuestionQuery = {
+      grammarId: (router.query.id as string) || initGrammar.id,
+      limit: Number(router.query.limit || pageSize),
+      page: Number(router.query.page || pageIndex + 1),
+   };
+
+   const { data, isLoading } = useQuestions(q);
 
    const {
       mutateAsync: handleCreateQuestion,
       isLoading: isLoadingCreateQuestion,
-   } = useCreateQuestion({
-      parentId: router.query.id as string,
-   });
+   } = useCreateQuestion(q);
+
+   const {
+      mutateAsync: handleRemoveQuestions,
+      isLoading: isLoadingRemoveQuestions,
+   } = useRemoveQuestions(q);
 
    const {
       mutateAsync: handleUpdateQuestion,
       isLoading: isLoadingUpdateQuestion,
-   } = useUpdateQuestion({
-      parentId: router.query.id as string,
-   });
+   } = useUpdateQuestion(q);
 
    const columns: ColumnDef<TQuestion>[] = useMemo(
       () => [
@@ -82,15 +99,12 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                            onSubmit={async ({ close, values, resetForm }) => {
                               await handleUpdateQuestion({
                                  data: {
-                                    answers: values.answers.map((answer) => ({
-                                       content: answer.content,
-                                       isCorrect: answer.isCorrect,
-                                       id: answer.id as string,
+                                    ...values,
+                                    answers: values.answers.map((a) => ({
+                                       content: a.content,
+                                       id: a.id as string,
+                                       isCorrect: a.isCorrect,
                                     })),
-                                    text: values.text,
-                                    explain: values.explain,
-                                    partType: question?.part.type as PartType,
-                                    parentId: question?.id as string,
                                  },
                                  id: row.original.id,
                               });
@@ -129,84 +143,130 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
             },
          },
       ],
-      [question, handleUpdateQuestion]
+      [handleUpdateQuestion]
+   );
+
+   const pagination = useMemo(
+      () => ({
+         pageIndex,
+         pageSize,
+      }),
+      [pageIndex, pageSize]
    );
 
    const table = useReactTable({
       columns,
       data: data?.questions || [],
       getCoreRowModel: getCoreRowModel(),
+      getRowId: (row, relativeIndex, parent) => {
+         return parent ? [parent.id, row.id].join('.') : row.id;
+      },
+      state: {
+         rowSelection,
+         pagination,
+      },
+      onRowSelectionChange: setRowSelection,
+      enableRowSelection: true,
+      onPaginationChange: setPagination,
+      manualPagination: true,
+      pageCount: calcPageCount(data?.total || 0, pageSize),
    });
 
+   useEffect(() => {
+      router.push({
+         pathname: router.pathname,
+         query: {
+            ...router.query,
+            page: pageIndex + 1,
+            limit: pageSize,
+         },
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [pageIndex, pageSize]);
+
    return (
-      <div>
+      <>
          <div className="py-4 space-y-4">
             <div className="flex items-center justify-between">
-               <h3 className="text-lg font-semibold">Sub questions</h3>
+               <h3 className="text-lg font-semibold">
+                  Questions of {grammar?.name}
+               </h3>
                <CreateUpdateCommonQuestion
-                  type="create"
-                  onSubmit={async ({ close, values, resetForm }) => {
+                  onSubmit={async ({ values, close, resetForm }) => {
                      await handleCreateQuestion({
-                        partType: question?.part.type as PartType,
-                        parentId: question?.id as string,
-                        answers: values.answers,
-                        text: values.text,
+                        grammarId: router.query.id as string,
                         explain: values.explain,
+                        text: values.text,
+                        answers: values.answers.map((a) => ({
+                           content: a.content,
+                           isCorrect: a.isCorrect,
+                        })),
                      });
                      close?.();
                      resetForm?.();
                   }}
                >
-                  <Button variants="primary">Create questions</Button>
+                  <Button variants="primary">Create question</Button>
                </CreateUpdateCommonQuestion>
             </div>
-            <div>
-               <DataTable table={table} />
-            </div>
+            <DataTable
+               table={table}
+               isLoading={isLoading}
+               onRemoveSelectedRows={async (onClose) => {
+                  await handleRemoveQuestions(rowSelection);
+                  onClose?.();
+               }}
+            />
          </div>
-         {(isLoadingCreateQuestion || isLoadingUpdateQuestion) && (
+         {(isLoadingCreateQuestion ||
+            isLoadingRemoveQuestions ||
+            isLoadingUpdateQuestion) && (
             <LoadingFullPage
-               className="backdrop-blur-sm z-[10000] fixed inset-0 bg-transparent"
+               className="bg-transparent backdrop-blur-sm z-[1000] fixed inset-0 "
                classNameLoading="text-primary"
             />
          )}
-      </div>
+      </>
    );
 };
 
-ChildrenQuestions.getLayout = (page) => {
+Grammar.getLayout = (page) => {
    return <AdminLayout>{page}</AdminLayout>;
 };
 
 export const getServerSideProps = withRoute({
    isProtected: true,
    onlyAdmin: true,
-})(async ({ ctx, access_token, refresh_token }) => {
-   const id = ctx.query.id as string;
+})(async ({ access_token, refresh_token, ctx }) => {
+   const id = ctx.params?.id as string;
 
-   const question = await http_server(
-      {
-         accessToken: access_token as string,
-         refreshToken: refresh_token as string,
-      },
-      `/questions/${id}`
-   )
-      .then((res) => res.data)
-      .catch((e) => {
-         return null;
-      });
+   try {
+      const grammar = await http_server(
+         {
+            accessToken: access_token as string,
+            refreshToken: refresh_token as string,
+         },
+         `/grammars/${id}`
+      )
+         .then((r) => r.data)
+         .catch(() => null);
 
-   if (!question) {
+      if (!grammar) {
+         return {
+            notFound: true,
+         };
+      }
+
+      return {
+         props: {
+            grammar,
+         },
+      };
+   } catch (error) {
       return {
          notFound: true,
       };
    }
-
-   return {
-      props: {
-         question,
-      },
-   };
 });
 
-export default ChildrenQuestions;
+export default Grammar;

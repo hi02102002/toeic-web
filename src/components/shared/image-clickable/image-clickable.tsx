@@ -18,7 +18,7 @@ export const ImageClickAble = ({ alt, height, src, width }: Props) => {
                   alt={alt}
                   width={width}
                   height={height}
-                  className="object-contain"
+                  className="object-contain rounded"
                />
             </div>
          </DialogTrigger>

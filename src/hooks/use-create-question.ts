@@ -29,7 +29,7 @@ export const useCreateQuestion = (q?: TQuestionQuery) => {
          toast.error(err?.response?.data?.message || 'Something went wrong');
       },
       onSettled(data, error, variables, context) {
-         queryClient.invalidateQueries(['questions', q]);
+         queryClient.invalidateQueries(['questions', JSON.stringify(q)]);
       },
       onSuccess(data) {
          toast.success(data.message);

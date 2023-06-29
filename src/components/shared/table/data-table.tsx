@@ -14,12 +14,14 @@ interface DataTableProps<TData> {
    table: TTable<TData>;
    isLoading?: boolean;
    onRemoveSelectedRows?: (onClose?: () => void) => void;
+   showSelect?: Boolean;
 }
 
 export const DataTable = <TData extends object>({
    table,
    isLoading,
    onRemoveSelectedRows,
+   showSelect = true,
 }: DataTableProps<TData>) => {
    return (
       <div className="space-y-4">
@@ -85,6 +87,7 @@ export const DataTable = <TData extends object>({
          <DataTablePagination
             table={table}
             onRemoveSelectedRows={onRemoveSelectedRows}
+            showSelect={showSelect}
          />
       </div>
    );

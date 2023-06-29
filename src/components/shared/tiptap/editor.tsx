@@ -40,14 +40,14 @@ export const Editor = ({ value, onChange, error }: Props) => {
    return (
       <div
          className={cn(
-            'border-2 rounded border-border focus-within:border-primary',
+            'border-2 rounded border-input focus-within:border-primary',
             {
                'border-red-500 focus-within:border-red-500': error,
             }
          )}
       >
          <Toolbar editor={editor} />
-         <EditorContent editor={editor} className="px-2 prose" />
+         <EditorContent editor={editor} className="px-2 prose w-full" />
       </div>
    );
 };

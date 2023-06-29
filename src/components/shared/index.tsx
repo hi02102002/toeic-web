@@ -1,5 +1,6 @@
 export * from './avatar';
 export { default as Button } from './button';
+export * from './card';
 export * from './checkbox';
 export * from './dialog';
 export * from './dropdown';

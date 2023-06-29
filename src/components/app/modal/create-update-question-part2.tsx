@@ -73,15 +73,15 @@ export const CreateUpdateQuestionPart2 = ({
          audio: undefined,
          answers: [
             {
-               content: '',
+               content: 'A',
                isCorrect: false,
             },
             {
-               content: '',
+               content: 'B',
                isCorrect: false,
             },
             {
-               content: '',
+               content: 'C',
                isCorrect: false,
             },
          ],
@@ -191,6 +191,7 @@ export const CreateUpdateQuestionPart2 = ({
                                              error={Boolean(
                                                 errors.answers?.[index]?.content
                                              )}
+                                             disabled
                                           />
                                        </FormControl>
                                        <FormMessage />

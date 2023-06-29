@@ -34,6 +34,9 @@ module.exports = withTV({
             popover: 'rgb(var(--popover) / <alpha-value>)',
             'popover-foreground':
                'rgb(var(--popover-foreground) / <alpha-value>)',
+            card: 'hsl(var(--card) / <alpha-value>)',
+            'foreground-foreground':
+               'hsl(var(--foreground-foreground) / <alpha-value>)',
          },
          spacing: {
             sidebar: '13.75rem',

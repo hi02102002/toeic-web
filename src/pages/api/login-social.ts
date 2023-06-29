@@ -1,7 +1,9 @@
 import { BASE_URL } from '@/constants';
+import { auth } from '@/libs/firebase';
 import { TBaseResponse } from '@/types';
 import axios, { AxiosError } from 'axios';
 import { setCookie } from 'cookies-next';
+import { signOut } from 'firebase/auth';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -52,7 +54,7 @@ export default async function handler(
 
       return res.status(405).json({ message: 'Method not allowed' });
    } catch (error) {
-      console.log(error);
+      await signOut(auth);
       if (error instanceof AxiosError) {
          return res.status(error.response?.status || 500).json({
             message: error.response?.data.message || 'Internal server error',

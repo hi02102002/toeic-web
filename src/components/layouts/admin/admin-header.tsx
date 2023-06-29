@@ -35,6 +35,10 @@ const NAV_LINKS = [
       href: ROUTES.ADMIN_TOIEC_TESTS,
    },
    {
+      label: 'National Tests',
+      href: ROUTES.ADMIN_NATIONAL_TESTS,
+   },
+   {
       label: 'Words',
       href: ROUTES.ADMIN_WORDS,
    },
@@ -102,7 +106,7 @@ const AppHeader = () => {
                               />
                               <div className="flex-col items-start hidden sm:flex">
                                  <span className="text-sm font-semibold">
-                                    {user.name} ({user.role})
+                                    {user.name} ({user.roles})
                                  </span>
                                  <span className="text-xs text-muted-foreground line-clamp-1 ">
                                     {user.email}
@@ -119,7 +123,7 @@ const AppHeader = () => {
                            >
                               <div className="flex flex-col items-start py-1.5 px-2">
                                  <span className="text-sm font-semibold">
-                                    {user.name} ({user.role})
+                                    {user.name} ({user.roles})
                                  </span>
                                  <span className="text-xs text-muted-foreground line-clamp-1 ">
                                     {user.email}

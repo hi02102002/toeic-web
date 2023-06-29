@@ -6,7 +6,7 @@ import {
    InputWrapper,
    Link,
 } from '@/components/shared';
-import { BASE_URL, ROUTES, URL_KEYS } from '@/constants';
+import { BASE_URL, ROUTES } from '@/constants';
 import { withRoute } from '@/utils/withRoute';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconBrandTether } from '@tabler/icons-react';
@@ -55,7 +55,7 @@ const Register = () => {
    const handelRegister = async (values: FormValues) => {
       try {
          setIsLoading(true);
-         await axios.post(`${BASE_URL}${URL_KEYS.REGISTER}`, values);
+         await axios.post(`${BASE_URL}/auth/register`, values);
          toast.success('Register success');
          setIsLoading(false);
          router.push(ROUTES.LOGIN);

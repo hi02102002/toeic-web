@@ -1,5 +1,6 @@
 export * from './confirm';
 export * from './create-update-common-question';
+export * from './create-update-grammar';
 export * from './create-update-question-part1';
 export * from './create-update-question-part2';
 export * from './create-update-question-part34';

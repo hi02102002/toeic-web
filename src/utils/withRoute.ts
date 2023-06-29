@@ -80,7 +80,11 @@ export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
       };
    }
 
-   if (user && options?.onlyAdmin && user.role !== Role.ADMIN) {
+   if (
+      user &&
+      options?.onlyAdmin &&
+      !user.roles.some((r) => r === Role.ADMIN)
+   ) {
       return {
          redirect: {
             destination: ROUTES.DASHBOARD,

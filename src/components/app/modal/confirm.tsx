@@ -40,7 +40,9 @@ export const Confirm = ({ children, title, description, onConfirm }: Props) => {
                <DialogDescription>{description}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-               <Button onClick={onCloseConfirm}>Cancel</Button>
+               <Button onClick={onCloseConfirm} variants="outline">
+                  Cancel
+               </Button>
                <Button
                   variants="danger"
                   onClick={() => {

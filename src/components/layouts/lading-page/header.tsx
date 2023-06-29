@@ -43,7 +43,7 @@ const Header = () => {
             <div>
                {user ? (
                   <Link href="/dashboard" className="flex items-center gap-2">
-                     Dashboard
+                     Get started
                      <IconArrowUpRight className="w-4 h-4 " />
                   </Link>
                ) : (

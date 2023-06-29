@@ -64,7 +64,7 @@ export const tableQuestionColumns: Record<string, ColumnDef<TQuestion>> = {
       cell({ row }) {
          return (
             <span className="line-clamp-2 whitespace-nowrap">
-               {row.getValue('text')}
+               {row.original.text.length > 0 ? row.original.text : 'N/A'}
             </span>
          );
       },

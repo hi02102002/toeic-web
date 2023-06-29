@@ -17,7 +17,7 @@ export const ViewParagraph = ({ children, paragraph }: Props) => {
    return (
       <Dialog>
          <DialogTrigger asChild>{children}</DialogTrigger>
-         <DialogContent>
+         <DialogContent className="w-full !max-w-2xl">
             <DialogHeader>
                <DialogTitle>View Paragraph</DialogTitle>
             </DialogHeader>

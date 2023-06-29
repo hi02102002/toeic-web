@@ -7,7 +7,7 @@ export const useTests = (q?: TTestQuery) => {
       queryKey: [
          'tests',
          q?.name || null,
-         Number(q?.limit || 10),
+         Number(q?.limit || 5),
          Number(q?.page || 1),
       ],
       queryFn: async () => {

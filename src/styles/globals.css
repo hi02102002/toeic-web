@@ -21,6 +21,8 @@
    --muted-foreground: 101 117 139;
    --popover: 255 255 255;
    --popover-foreground: 15 23 41;
+   --card: 0 0% 100%;
+   --card-foreground: 222.2 47.4% 11.2%;
 }
 
 @media (dark-mode: dark) {

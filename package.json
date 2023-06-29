@@ -70,6 +70,7 @@
     "@tanstack/eslint-plugin-query": "^4.29.9",
     "@types/cookie": "^0.5.1",
     "@types/lodash": "^4.14.195",
+    "@types/uuid": "^9.0.2",
     "eslint-plugin-storybook": "^0.6.12",
     "sass": "^1.62.1",
     "storybook": "7.0.18"

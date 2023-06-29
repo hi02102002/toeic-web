@@ -215,7 +215,7 @@ const Tests: NextPageWithLayout = () => {
 
          query.name = name ? name.toString() : undefined;
 
-         router.replace({
+         router.push({
             pathname: router.pathname,
             query,
          });
@@ -274,10 +274,11 @@ const Tests: NextPageWithLayout = () => {
                <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-4">
                      <Input
-                        className="w-full max-w-xs"
+                        className="w-full"
                         placeholder="Search"
                         value={search}
                         onChange={(e: any) => setSearch(e.target.value)}
+                        classNameContainer="max-w-xs"
                      />
                      {search && (
                         <Button
