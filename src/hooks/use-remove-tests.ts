@@ -1,9 +1,10 @@
 import { testsService } from '@/services';
+import { TTestQuery } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 
-export const useRemoveTests = () => {
+export const useRemoveTests = (q?: TTestQuery) => {
    const router = useRouter();
    const queryClient = useQueryClient();
    return useMutation({
@@ -19,12 +20,7 @@ export const useRemoveTests = () => {
       },
       onSettled() {
          const query = router.query;
-         queryClient.invalidateQueries([
-            'tests',
-            query?.name || null,
-            Number(query?.limit || 10),
-            Number(query?.page || 1),
-         ]);
+         queryClient.invalidateQueries(['tests', JSON.stringify(q)]);
       },
       onError(err) {
          toast.error('Something went wrong');

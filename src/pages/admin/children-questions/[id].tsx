@@ -14,7 +14,12 @@ import { DataTable } from '@/components/shared/table';
 import { useCreateQuestion, useQuestion, useQuestions } from '@/hooks';
 import { useUpdateQuestion } from '@/hooks/use-update-question';
 import { http_server } from '@/libs/axios';
-import { NextPageWithLayout, PartType, TQuestion } from '@/types';
+import {
+   NextPageWithLayout,
+   PartType,
+   TQuestion,
+   TQuestionQuery,
+} from '@/types';
 import { tableQuestionColumns } from '@/utils/table';
 import { withRoute } from '@/utils/withRoute';
 import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
@@ -34,28 +39,27 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
    question: initQuestion,
 }) => {
    const router = useRouter();
+
+   const q: TQuestionQuery = {
+      parentId: (router.query.id as string) || initQuestion.id,
+   };
+
    const { data: question } = useQuestion(
       router.query.id as string,
       initQuestion
    );
 
-   const { data } = useQuestions({
-      parentId: router.query.id as string,
-   });
+   const { data, isLoading } = useQuestions(q);
 
    const {
       mutateAsync: handleCreateQuestion,
       isLoading: isLoadingCreateQuestion,
-   } = useCreateQuestion({
-      parentId: router.query.id as string,
-   });
+   } = useCreateQuestion(q);
 
    const {
       mutateAsync: handleUpdateQuestion,
       isLoading: isLoadingUpdateQuestion,
-   } = useUpdateQuestion({
-      parentId: router.query.id as string,
-   });
+   } = useUpdateQuestion(q);
 
    const columns: ColumnDef<TQuestion>[] = useMemo(
       () => [
@@ -161,7 +165,7 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                </CreateUpdateCommonQuestion>
             </div>
             <div>
-               <DataTable table={table} />
+               <DataTable table={table} isLoading={isLoading} />
             </div>
          </div>
          {(isLoadingCreateQuestion || isLoadingUpdateQuestion) && (

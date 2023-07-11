@@ -1,13 +1,19 @@
-import { testsService } from '@/services';
+import { testsService, uploadService } from '@/services';
+import { TQuestionQuery, TTestDto } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
-export const useCreateTest = () => {
-   const router = useRouter();
+export const useCreateTest = (q?: TQuestionQuery) => {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async (name: string) => {
-         return await testsService.createTest(name);
+      mutationFn: async (fields: TTestDto) => {
+         const audio = fields.audio
+            ? await uploadService.upload(fields.audio?.[0] as File)
+            : undefined;
+
+         return await testsService.createTest({
+            name: fields.name,
+            audio: audio?.url || '',
+         });
       },
       onSuccess: (data) => {
          toast.success(data.message);
@@ -16,13 +22,7 @@ export const useCreateTest = () => {
          toast.error('Something went wrong');
       },
       onSettled() {
-         const query = router.query;
-         queryClient.invalidateQueries([
-            'tests',
-            query?.name || null,
-            Number(query?.limit || 10),
-            Number(query?.page || 1),
-         ]);
+         queryClient.invalidateQueries(['tests', JSON.stringify(q)]);
       },
    });
 };

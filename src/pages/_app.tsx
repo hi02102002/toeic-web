@@ -8,13 +8,20 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import NextProgress from 'next-progress';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
+
+const ScrollTop = dynamic(
+   () => import('@/components/shared').then((v) => v.ScrollTop),
+   {
+      ssr: false,
+   }
+);
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
    const getLayout = Component.getLayout ?? ((page) => page);
    const [queryClient] = useState(() => new QueryClient());
-
-   console.log(pageProps.dehydratedState);
 
    return (
       <>
@@ -31,6 +38,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
          </UserProvider>
+         <ScrollTop />
       </>
    );
 }

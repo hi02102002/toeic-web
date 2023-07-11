@@ -41,6 +41,7 @@ export type TTest = {
    createdAt: Date;
    updatedAt: Date;
    parts: TPart[];
+   audio: string;
 };
 
 export type TPart = {
@@ -50,6 +51,7 @@ export type TPart = {
    updatedAt: Date;
    testId: string;
    type: PartType;
+   questions: TQuestion[];
 };
 
 export type TBaseResponse<T = unknown> = {
@@ -133,6 +135,7 @@ export type TQuestion = {
    nationalTestId: string | null;
    answers: TAnswer[];
    part: TPart;
+   quesions: TQuestion[];
 };
 
 export type TQuestionDto = {
@@ -147,6 +150,12 @@ export type TQuestionDto = {
    grammarId?: string | null;
    nationalTestId?: string | null;
    partId?: string | null;
+   testId?: string | null;
+};
+
+export type TTestDto = {
+   name: string;
+   audio: string | FileList;
 };
 
 export type TQuestionQuery = Partial<{
@@ -182,3 +191,30 @@ export type TUserQuery = Partial<{
    limit: number;
    name: string;
 }>;
+
+export type TTestUser = {
+   id: string;
+   createdAt: Date;
+   updatedAt: Date;
+   totalScore: number;
+   listeningScore: number;
+   readingScore: number;
+   readingCorrect: number;
+   listeningCorrect: number;
+   numAttempt: number;
+   testId: string;
+   userId: string;
+   test: TTest;
+   user: TUser;
+};
+
+export type TChoice = {
+   questionId: TQuestion['id'];
+   answerId: TAnswer['id'];
+   partType: PartType;
+};
+
+export type TSubmitTestDto = {
+   testId: string;
+   choices: Array<TChoice>;
+};

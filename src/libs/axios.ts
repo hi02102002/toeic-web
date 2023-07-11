@@ -61,13 +61,18 @@ http.interceptors.response.use(
    }
 );
 
-const httpCallApi = async <T = unknown>(url: string, accessToken: string) => {
+const httpCallApi = async <T = unknown>(
+   url: string,
+   accessToken: string,
+   query?: any
+) => {
    const res: TBaseResponse<T> = await axios
       .get(`${BASE_URL}${url}`, {
          headers: {
             Authorization: `Bearer ${accessToken}`,
          },
          withCredentials: true,
+         params: query,
       })
       .then((r) => r.data);
 
@@ -79,19 +84,21 @@ const http_server = async <T = unknown>(
       accessToken,
       refreshToken,
    }: {
-      accessToken: string;
-      refreshToken: string;
+      accessToken: string | undefined;
+      refreshToken: string | undefined;
    },
-   url: string
+   url: string,
+   query?: Record<string, any>
 ) => {
    try {
-      const res = await httpCallApi<T>(url, accessToken);
+      const res = await httpCallApi<T>(url, accessToken as string, query);
       return res;
    } catch (error: any) {
-      if (error.response.status === 401) {
-         const data = await handleRefreshToken(refreshToken);
+      console.log(error);
+      if (error.response?.status === 401) {
+         const data = await handleRefreshToken(refreshToken as string);
 
-         const res = await httpCallApi<T>(url, data.accessToken);
+         const res = await httpCallApi<T>(url, data.accessToken, query);
 
          return res;
       }

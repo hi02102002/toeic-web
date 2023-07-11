@@ -20,7 +20,7 @@ import { DataTable } from '@/components/shared/table';
 import { useCreateTest, useTests, useUpdateTest } from '@/hooks';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useRemoveTests } from '@/hooks/use-remove-tests';
-import { NextPageWithLayout, TTest } from '@/types';
+import { NextPageWithLayout, TTest, TTestQuery } from '@/types';
 import { calcPageCount } from '@/utils';
 import { withRoute } from '@/utils/withRoute';
 import {
@@ -40,7 +40,7 @@ import {
 } from '@tanstack/react-table';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const Tests: NextPageWithLayout = () => {
    const router = useRouter();
@@ -51,16 +51,21 @@ const Tests: NextPageWithLayout = () => {
    const [rowSelection, setRowSelection] = useState({});
    const [search, setSearch] = useState<string>('');
    const debounceSearch = useDebounce(search, 500);
+   const q: TTestQuery = {
+      limit: pageSize,
+      name: debounceSearch,
+      page: pageIndex + 1,
+   };
    const { mutateAsync: handleCreateTests, isLoading: isLoadingCreateTest } =
-      useCreateTest();
+      useCreateTest(q);
 
    const { mutateAsync: handleUpdateTest, isLoading: isLoadingUpdateTest } =
-      useUpdateTest();
+      useUpdateTest(q);
 
    const { mutateAsync: handleRemoveTests, isLoading: isLoadingRemoveTests } =
-      useRemoveTests();
+      useRemoveTests(q);
 
-   const { data, isLoading } = useTests(router.query);
+   const { data, isLoading } = useTests(q);
 
    const columns: ColumnDef<TTest>[] = [
       {
@@ -89,6 +94,13 @@ const Tests: NextPageWithLayout = () => {
          header: 'Name',
          cell({ row }) {
             return <span className="font-medium">{row.getValue('name')}</span>;
+         },
+      },
+      {
+         accessorKey: 'audio',
+         header: 'Audio',
+         cell({ row }) {
+            return <audio src={row.original.audio} controls />;
          },
       },
       {
@@ -140,16 +152,21 @@ const Tests: NextPageWithLayout = () => {
                      </DropdownMenuSub>
                      <DropdownMenuSeparator />
                      <CreateUpdateTest
-                        onSubmit={async ({ name }, reset, close) => {
+                        onSubmit={async ({ name, audio }, reset, close) => {
                            await handleUpdateTest({
                               id: row.getValue('id'),
                               name,
+                              audio:
+                                 audio?.[0]?.name === row.original.audio
+                                    ? undefined
+                                    : audio,
                            });
                            reset?.();
                            close?.();
                         }}
                         defaultValues={{
                            name: row.getValue('name'),
+                           audio: row.original.audio,
                         }}
                         testName={row.getValue('name')}
                         type="update"
@@ -193,36 +210,6 @@ const Tests: NextPageWithLayout = () => {
       },
    ];
 
-   const filterSearch = useCallback(
-      ({
-         name,
-         limit,
-         page,
-      }: {
-         name?: string;
-         page?: number;
-         limit?: number;
-      }) => {
-         const { query } = router;
-
-         if (page) {
-            query.page = page ? page.toString() : undefined;
-         }
-
-         if (limit) {
-            query.limit = limit ? limit.toString() : undefined;
-         }
-
-         query.name = name ? name.toString() : undefined;
-
-         router.push({
-            pathname: router.pathname,
-            query,
-         });
-      },
-      [router]
-   );
-
    const pagination = useMemo(
       () => ({
          pageIndex,
@@ -251,21 +238,6 @@ const Tests: NextPageWithLayout = () => {
       },
    });
 
-   useEffect(() => {
-      filterSearch({
-         page: pageIndex + 1,
-         limit: pageSize,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [pageIndex, pageSize]);
-
-   useEffect(() => {
-      filterSearch({
-         name: debounceSearch,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [debounceSearch]);
-
    return (
       <>
          <div className="py-4 space-y-4">
@@ -291,8 +263,11 @@ const Tests: NextPageWithLayout = () => {
                      )}
                   </div>
                   <CreateUpdateTest
-                     onSubmit={async ({ name }, reset, close) => {
-                        await handleCreateTests(name);
+                     onSubmit={async (data, reset, close) => {
+                        await handleCreateTests({
+                           audio: data?.audio as string,
+                           name: data.name,
+                        });
                         reset?.();
                         close?.();
                      }}

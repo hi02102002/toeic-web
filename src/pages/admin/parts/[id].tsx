@@ -52,7 +52,7 @@ import {
    useReactTable,
 } from '@tanstack/react-table';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 type Props = {
    part: TPart & {
@@ -104,6 +104,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                         ...values,
                         partType: 'PART1',
                         partId: part?.id as string,
+                        testId: part.testId,
                      });
                      resetForm?.();
                      close?.();
@@ -137,6 +138,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                         ...values,
                         partType: part.type,
                         partId: part?.id as string,
+                        testId: part.testId,
                      });
                      resetForm?.();
                      close?.();
@@ -153,6 +155,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                         ...values,
                         partType: part.type,
                         partId: part?.id as string,
+                        testId: part.testId,
                      });
                      resetForm?.();
                      close?.();
@@ -170,6 +173,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                         ...values,
                         partType: part.type,
                         partId: part?.id as string,
+                        testId: part.testId,
                      });
                      resetForm?.();
                      close?.();
@@ -209,6 +213,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                                  isCorrect: answer.isCorrect,
                                  id: answer.id as string,
                               })),
+                              testId: part.testId,
                            },
                            id: row.original.id,
                         });
@@ -257,6 +262,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                                  isCorrect: answer.isCorrect,
                                  id: answer.id as string,
                               })),
+                              testId: part.testId,
                            },
                            id: row.original.id,
                         });
@@ -317,6 +323,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                                  partId: row.original.partId,
                                  transcript: values.transcript,
                                  answers: [],
+                                 testId: part.testId,
                               },
                               id: row.original.id,
                            });
@@ -355,6 +362,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                                  id: answer.id as string,
                               })),
                               explain: values.explain,
+                              testId: part.testId,
                            },
                            id: row.original.id,
                         });
@@ -403,6 +411,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                                  partType: part.type as PartType,
                                  text: values.text,
                                  answers: [],
+                                 testId: part.testId,
                               },
                               id: row.original.id,
                            });
@@ -529,18 +538,6 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
       manualPagination: true,
       pageCount: calcPageCount(data?.total || 0, pageSize),
    });
-
-   useEffect(() => {
-      router.replace({
-         pathname: router.pathname,
-         query: {
-            ...router.query,
-            page: pageIndex + 1,
-            limit: pageSize,
-         },
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [pageIndex, pageSize]);
 
    return (
       <>

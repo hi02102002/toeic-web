@@ -1,3 +1,5 @@
+import { PartType } from '@/types';
+
 export const BASE_URL = 'http://localhost:4000';
 
 export const ROUTES = {
@@ -31,3 +33,15 @@ export const ROUTES_AUTH = [
    ROUTES.FORGOT_PASSWORD,
    ROUTES.RESET_PASSWORD,
 ];
+
+export const NUMBER_QUESTIONS_PART: Record<keyof typeof PartType, number> = {
+   PART1: 6,
+   PART2: 25,
+   PART3: 39,
+   PART4: 30,
+   PART5: 30,
+   PART6: 16,
+   PART7: 54,
+};
+
+export const TIME_OF_TOIEC = 2 * 60 * 60 * 1000; // millisecond

@@ -1,11 +1,17 @@
 import { http } from '@/libs/axios';
-import { TBaseResponse, TPart, TTest, TTestQuery } from '@/types';
+import {
+   TBaseResponse,
+   TPart,
+   TSubmitTestDto,
+   TTest,
+   TTestDto,
+   TTestQuery,
+   TTestUser,
+} from '@/types';
 
 class TestsService {
-   createTest(name: string): Promise<TBaseResponse<TTest>> {
-      return http.post('/tests', {
-         name,
-      });
+   createTest(fields: TTestDto): Promise<TBaseResponse<TTest>> {
+      return http.post('/tests', fields);
    }
 
    removeTests(ids: string[]) {
@@ -16,9 +22,14 @@ class TestsService {
       });
    }
 
-   updateTest(id: string, name: string): Promise<TBaseResponse<TTest>> {
+   updateTest(
+      id: string,
+      name: string,
+      audio: string
+   ): Promise<TBaseResponse<TTest>> {
       return http.patch(`/tests/${id}`, {
          name,
+         audio,
       });
    }
 
@@ -45,6 +56,18 @@ class TestsService {
       >
    > {
       return http.get(`/tests/parts/${id}`);
+   }
+
+   getPractice(testId: string): Promise<TBaseResponse<TTest | null>> {
+      return http.get(`/tests/${testId}/practice`);
+   }
+
+   submitTest(fields: TSubmitTestDto): Promise<TBaseResponse<TTestUser>> {
+      return http.post('/tests/submit', fields);
+   }
+
+   getResult(id: string): Promise<TBaseResponse<TTestUser>> {
+      return http.get(`/tests/results/${id}`);
    }
 }
 

@@ -1,16 +1,29 @@
-import { testsService } from '@/services';
+import { testsService, uploadService } from '@/services';
+import { TTestQuery } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 
-export const useUpdateTest = () => {
+export const useUpdateTest = (q?: TTestQuery) => {
    const router = useRouter();
    const queryClient = useQueryClient();
 
    return useMutation({
-      mutationFn: async (data: { id: string; name: string }) => {
-         const { id, name } = data;
-         const res = await testsService.updateTest(id, name);
+      mutationFn: async (data: {
+         id: string;
+         name: string;
+         audio: string | FileList;
+      }) => {
+         const { id, name, audio } = data;
+         const _audio = audio
+            ? await uploadService.upload(audio?.[0] as File)
+            : undefined;
+
+         const res = await testsService.updateTest(
+            id,
+            name,
+            _audio?.url as string
+         );
          return res;
       },
       onSuccess(data, variables, context) {
@@ -18,12 +31,7 @@ export const useUpdateTest = () => {
       },
       onSettled() {
          const query = router.query;
-         queryClient.invalidateQueries([
-            'tests',
-            query?.name || null,
-            Number(query?.limit || 10),
-            Number(query?.page || 1),
-         ]);
+         queryClient.invalidateQueries(['tests', JSON.stringify(q)]);
       },
    });
 };

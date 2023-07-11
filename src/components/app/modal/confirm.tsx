@@ -16,9 +16,18 @@ type Props = {
    title: string;
    description: string;
    onConfirm?: (close?: () => void) => void;
+   type?: 'danger' | 'primary';
+   textConfirm?: string;
 };
 
-export const Confirm = ({ children, title, description, onConfirm }: Props) => {
+export const Confirm = ({
+   children,
+   title,
+   description,
+   onConfirm,
+   type = 'primary',
+   textConfirm = 'Confirm',
+}: Props) => {
    const [isOpenConfirm, { onClose: onCloseConfirm, onOpen: onOpenConfirm }] =
       useDisclosure();
 
@@ -44,12 +53,12 @@ export const Confirm = ({ children, title, description, onConfirm }: Props) => {
                   Cancel
                </Button>
                <Button
-                  variants="danger"
+                  variants={type}
                   onClick={() => {
                      onConfirm?.(onCloseConfirm);
                   }}
                >
-                  Confirm
+                  {textConfirm}
                </Button>
             </DialogFooter>
          </DialogContent>

@@ -38,11 +38,9 @@ import {
    useReactTable,
 } from '@tanstack/react-table';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-type Props = {};
-
-const Grammars: NextPageWithLayout = (props: Props) => {
+const Grammars: NextPageWithLayout = () => {
    const router = useRouter();
    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
       pageIndex: 0,
@@ -53,9 +51,9 @@ const Grammars: NextPageWithLayout = (props: Props) => {
    const [rowSelection, setRowSelection] = useState({});
 
    const q: TGrammarQuery = {
-      limit: Number(router.query.limit || pageSize),
-      page: Number(router.query.page || pageIndex + 1),
-      name: (router.query.name as string) || debounceSearch,
+      limit: pageSize,
+      page: pageIndex + 1,
+      name: debounceSearch,
    };
    const { data, isLoading } = useGrammars(q);
 
@@ -210,40 +208,6 @@ const Grammars: NextPageWithLayout = (props: Props) => {
       [handleUpdateGrammar, handleRemoveGrammars, router]
    );
 
-   const filterSearch = useCallback(
-      ({
-         name,
-         limit,
-         page,
-      }: {
-         name?: string;
-         page?: number;
-         limit?: number;
-      }) => {
-         const { query } = router;
-
-         if (!router.isReady) {
-            return;
-         }
-
-         if (page) {
-            query.page = page ? page.toString() : undefined;
-         }
-
-         if (limit) {
-            query.limit = limit ? limit.toString() : undefined;
-         }
-
-         query.name = name ? name.toString() : undefined;
-
-         router.replace({
-            pathname: router.pathname,
-            query,
-         });
-      },
-      [router]
-   );
-
    const pagination = useMemo(
       () => ({
          pageIndex,
@@ -269,21 +233,6 @@ const Grammars: NextPageWithLayout = (props: Props) => {
       onPaginationChange: setPagination,
       manualPagination: true,
    });
-
-   useEffect(() => {
-      filterSearch({
-         page: pageIndex + 1,
-         limit: pageSize,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [pagination]);
-
-   useEffect(() => {
-      filterSearch({
-         name: debounceSearch,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [debounceSearch]);
 
    return (
       <div className="py-4 space-y-4">

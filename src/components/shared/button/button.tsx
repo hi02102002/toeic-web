@@ -8,7 +8,8 @@ export const button = tv({
    variants: {
       variants: {
          default: '',
-         primary: 'bg-primary hover:bg-primary/90 text-primary-foreground',
+         primary:
+            'bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-transparent',
          secondary:
             'bg-secondary hover:bg-secondary/90 text-secondary-foreground',
          outline:

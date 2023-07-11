@@ -36,25 +36,22 @@ import {
    getCoreRowModel,
    useReactTable,
 } from '@tanstack/react-table';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 
-type Props = {};
-
-const Users: NextPageWithLayout = (props: Props) => {
-   const router = useRouter();
+const Users: NextPageWithLayout = () => {
    const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
    });
    const [search, setSearch] = useState<string>('');
    const debounceSearch = useDebounce(search, 500);
+   const [status, setStatus] = useState<UserStatus | 'ALL'>('ALL');
 
    const q: TUserQuery = {
-      page: Number(router.query.page || pagination.pageIndex + 1),
-      limit: Number(router.query.limit || pagination.pageSize),
-      name: (router.query.name as string) || debounceSearch,
-      status: (router.query.status as any) || 'ALL',
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      name: debounceSearch,
+      status,
    };
 
    const { data, isLoading } = useUsers(q);
@@ -164,51 +161,6 @@ const Users: NextPageWithLayout = (props: Props) => {
       pageCount: calcPageCount(data?.total || 0, pagination.pageSize),
    });
 
-   const filterSearch = useCallback(
-      ({ name, limit, page, status }: TUserQuery) => {
-         const { query } = router;
-
-         if (!router.isReady) {
-            return;
-         }
-
-         if (page) {
-            query.page = page ? page.toString() : undefined;
-         }
-
-         if (limit) {
-            query.limit = limit ? limit.toString() : undefined;
-         }
-
-         if (name !== undefined) {
-            query.name = name ? name.toString() : undefined;
-         }
-
-         query.status = status;
-
-         router.replace({
-            pathname: router.pathname,
-            query,
-         });
-      },
-      [router]
-   );
-
-   useEffect(() => {
-      filterSearch({
-         page: pagination.pageIndex + 1,
-         limit: pagination.pageSize,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [pagination]);
-
-   useEffect(() => {
-      filterSearch({
-         name: debounceSearch,
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [debounceSearch]);
-
    return (
       <div className="py-4 space-y-4">
          <h3 className="text-lg font-semibold">Users</h3>
@@ -233,9 +185,7 @@ const Users: NextPageWithLayout = (props: Props) => {
             <Select
                defaultValue="ALL"
                onValueChange={(value) => {
-                  filterSearch({
-                     status: value as UserStatus | 'ALL',
-                  });
+                  setStatus(value as UserStatus | 'ALL');
                }}
             >
                <SelectTrigger className="w-[180px]">

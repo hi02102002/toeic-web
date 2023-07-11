@@ -14,11 +14,13 @@ import {
 } from '@/components/shared';
 import { useDisclosure } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 
 const schema = zod.object({
    name: zod.string().nonempty('Test name is required'),
+   audio: zod.any().refine((value) => value.length > 0, 'Audio is required'),
 });
 
 type FormValues = zod.infer<typeof schema>;
@@ -68,6 +70,21 @@ export const CreateUpdateTest = ({
       },
    });
 
+   const { ref: audioRef, ...audioProps } = register('audio');
+   const audioInputRef = useRef<HTMLInputElement | null>(null);
+
+   useEffect(() => {
+      if (defaultValues?.audio) {
+         const file = new File([], defaultValues?.audio);
+
+         const data = new DataTransfer();
+
+         data.items.add(file);
+
+         if (audioInputRef.current) audioInputRef.current.files = data.files;
+      }
+   });
+
    return (
       <Dialog
          open={openMenu}
@@ -92,21 +109,35 @@ export const CreateUpdateTest = ({
                   )}
                </DialogDescription>
             </DialogHeader>
-            <div>
-               <InputWrapper>
-                  <InputLabel required>Test name</InputLabel>
-                  <Input
-                     placeholder="Test name"
-                     {...register('name')}
-                     error={!!errors.name?.message}
-                  />
-                  {errors.name && (
-                     <InputMessage className="text-red-500">
-                        {errors.name.message}
-                     </InputMessage>
-                  )}
-               </InputWrapper>
-            </div>
+            <InputWrapper>
+               <InputLabel required>Test name</InputLabel>
+               <Input
+                  placeholder="Test name"
+                  {...register('name')}
+                  error={!!errors.name?.message}
+               />
+               {errors.name && (
+                  <InputMessage className="text-red-500">
+                     {errors.name.message}
+                  </InputMessage>
+               )}
+            </InputWrapper>
+            <InputWrapper>
+               <InputLabel required>Audio</InputLabel>
+               <input
+                  type="file"
+                  {...audioProps}
+                  ref={(e) => {
+                     audioRef(e);
+                     audioInputRef.current = e;
+                  }}
+               />
+               {errors.audio && (
+                  <InputMessage className="text-red-500">
+                     {errors.audio?.message as string}
+                  </InputMessage>
+               )}
+            </InputWrapper>
             <DialogFooter>
                <Button variants="secondary" onClick={onClose}>
                   Close

@@ -6,9 +6,18 @@ type Props = {
    alt: string;
    width: number;
    height: number;
+   widthImageModal?: number;
+   heightImageModal?: number;
 };
 
-export const ImageClickAble = ({ alt, height, src, width }: Props) => {
+export const ImageClickAble = ({
+   alt,
+   height,
+   src,
+   width,
+   widthImageModal = 500,
+   heightImageModal = 500,
+}: Props) => {
    return (
       <Dialog>
          <DialogTrigger>
@@ -23,12 +32,19 @@ export const ImageClickAble = ({ alt, height, src, width }: Props) => {
             </div>
          </DialogTrigger>
          <DialogContent
-            className="bg-transparent border-0 shadow-none h-[80vh]"
+            className="bg-transparent border-0 shadow-none !max-w-none flex items-center justify-center w-max !p-0"
             classNameClose="hidden"
+            style={{
+               width: widthImageModal,
+            }}
          >
-            <div className="aspect-square">
-               <Image src={src} alt={alt} fill className="object-contain" />
-            </div>
+            <Image
+               src={src}
+               alt={alt}
+               width={widthImageModal}
+               height={heightImageModal}
+               className="object-contain"
+            />
          </DialogContent>
       </Dialog>
    );

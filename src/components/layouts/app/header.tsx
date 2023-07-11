@@ -75,11 +75,12 @@ const AppHeader = () => {
       <>
          <header
             className={cn(
-               'flex items-center sticky top-0 left-0 right-0 border-b border-transparent transition-all',
+               'flex items-center sticky top-0 left-0 right-0 border-b border-transparent transition-all bg-white z-50',
                {
-                  'backdrop-blur-sm border-b border-border': scrollY > 300,
+                  'border-b border-border': scrollY > 100,
                }
             )}
+            id="app-header"
          >
             <div className="container w-full">
                <div className="flex items-center justify-between h-header">
@@ -158,7 +159,7 @@ const AppHeader = () => {
                <nav className="h-12">
                   <ul className="flex items-center gap-2">
                      {NAV_LINKS.map((link) => {
-                        const isActive = router.pathname === link.href;
+                        const isActive = router.pathname.includes(link.href);
 
                         return (
                            <li key={link.href}>
