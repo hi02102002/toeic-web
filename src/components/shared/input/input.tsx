@@ -6,7 +6,7 @@ import { VariantProps, tv } from 'tailwind-variants';
 
 const input = tv({
    base: cn(
-      'px-3 rounded border-2 border-input placeholder:text-muted-foreground w-full placeholder:leading-none relative transition-all',
+      'px-3 rounded border-2 border-input placeholder:text-muted-foreground w-full placeholder:leading-none relative transition-all  flex items-center',
       'focus:border-primary outline-0'
    ),
    variants: {
@@ -18,10 +18,21 @@ const input = tv({
       error: {
          true: 'border-red-500 focus:border-red-500',
       },
+      file: {
+         true: 'cursor-pointer !border-0 file:border-0 file:bg-transparent file:text-sm file:font-medium h-[unset] file:rounded file:cursor-pointer file:bg-primary file:text-primary-foreground px-0',
+      },
    },
    defaultVariants: {
       sizes: 'md',
    },
+   compoundVariants: [
+      {
+         // @ts-ignore
+         file: true,
+         sizes: 'md',
+         className: 'file:h-10 file:px-4',
+      },
+   ],
 });
 
 type Props = InputHTMLAttributes<HTMLInputElement> &
@@ -46,9 +57,13 @@ const Input = forwardRef<HTMLInputElement, Props>(
             )}
          >
             <input
-               className={cn(input({ sizes, error }), className, {
-                  'pr-9': isPassword,
-               })}
+               className={cn(
+                  input({ sizes, error, file: type === 'file' }),
+                  className,
+                  {
+                     'pr-9': isPassword,
+                  }
+               )}
                {...props}
                type={isPassword ? (!isShowPass ? 'password' : 'text') : type}
                ref={ref}

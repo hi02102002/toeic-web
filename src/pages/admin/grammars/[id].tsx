@@ -36,7 +36,7 @@ import {
    useReactTable,
 } from '@tanstack/react-table';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Props = {
    grammar: TGrammar;
@@ -53,8 +53,8 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
 
    const q: TQuestionQuery = {
       grammarId: (router.query.id as string) || initGrammar.id,
-      limit: Number(router.query.limit || pageSize),
-      page: Number(router.query.page || pageIndex + 1),
+      limit: pageSize,
+      page: pageIndex + 1,
    };
 
    const { data, isLoading } = useQuestions(q);
@@ -171,18 +171,6 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
       manualPagination: true,
       pageCount: calcPageCount(data?.total || 0, pageSize),
    });
-
-   useEffect(() => {
-      router.push({
-         pathname: router.pathname,
-         query: {
-            ...router.query,
-            page: pageIndex + 1,
-            limit: pageSize,
-         },
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [pageIndex, pageSize]);
 
    return (
       <>

@@ -11,6 +11,7 @@ export * from './link';
 export * from './loading-fullpage';
 export * from './pagination';
 export * from './progress';
+export * from './question';
 export * from './radio-group';
 export * from './scroll-area';
 export * from './scroll-top';

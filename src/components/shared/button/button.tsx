@@ -56,6 +56,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
          children,
          isLoading,
          leftIcon,
+         type = 'button',
          ...props
       }: Props,
       ref
@@ -71,6 +72,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
                }),
                className
             )}
+            type={type}
             disabled={disabled || isLoading}
             {...props}
          >

@@ -124,7 +124,7 @@ export const CreateUpdateTest = ({
             </InputWrapper>
             <InputWrapper>
                <InputLabel required>Audio</InputLabel>
-               <input
+               <Input
                   type="file"
                   {...audioProps}
                   ref={(e) => {

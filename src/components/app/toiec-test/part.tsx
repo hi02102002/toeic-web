@@ -5,9 +5,10 @@ import Question from './question';
 
 type Props = {
    part: TPart;
+   type?: 'result' | 'practice';
 };
 
-export const Part = ({ part }: Props) => {
+export const Part = ({ part, type = 'practice' }: Props) => {
    const arrLengthChildQuestions: number[] = [];
 
    const numberContinueQuestion = calcNumberContinueQuestion(part.type);
@@ -38,6 +39,7 @@ export const Part = ({ part }: Props) => {
                               `}
                         question={question}
                         partType={part.type}
+                        type={type}
                      />
                      <div className="space-y-4">
                         {question.quesions.map((q, _i) => {
@@ -52,6 +54,7 @@ export const Part = ({ part }: Props) => {
                                  }
                                  key={q.id}
                                  partType={part.type}
+                                 type={type}
                               />
                            );
                         })}
@@ -66,6 +69,7 @@ export const Part = ({ part }: Props) => {
                   order={numberContinueQuestion + i + 1}
                   partType={part.type}
                   key={question.id}
+                  type={type}
                />
             );
          })}

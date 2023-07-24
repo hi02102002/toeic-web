@@ -35,8 +35,8 @@ const NAV_LINKS = [
       href: ROUTES.ADMIN_TOIEC_TESTS,
    },
    {
-      label: 'National Tests',
-      href: ROUTES.ADMIN_NATIONAL_TESTS,
+      label: 'Topics',
+      href: ROUTES.ADMINT_TOPICS,
    },
    {
       label: 'Words',

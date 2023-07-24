@@ -34,7 +34,7 @@ const NAV_LINKS = [
    },
    {
       label: 'Vocabulary',
-      href: ROUTES.VOCABULARY,
+      href: ROUTES.VOCABULARIES,
    },
    {
       label: 'Grammars',

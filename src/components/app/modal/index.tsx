@@ -6,5 +6,7 @@ export * from './create-update-question-part2';
 export * from './create-update-question-part34';
 export * from './create-update-question-part67';
 export * from './create-update-test';
+export * from './create-update-topic';
+export * from './create-update-word';
 export * from './upload-image-tiptap';
 export * from './view-paragraph';

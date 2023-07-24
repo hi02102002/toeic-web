@@ -90,3 +90,7 @@ export const millisToMinutesAndSeconds = (millis: number) => {
    const seconds = Number(((millis % 60000) / 1000).toFixed(0));
    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 };
+
+export const idObjToArr = (obj: Record<string, boolean>) => {
+   return Object.keys(obj).filter((key) => obj[key]);
+};

@@ -206,9 +206,10 @@ export type TTestUser = {
    userId: string;
    test: TTest;
    user: TUser;
+   choices: TChoice[];
 };
 
-export type TChoice = {
+export type TChoiceInput = {
    questionId: TQuestion['id'];
    answerId: TAnswer['id'];
    partType: PartType;
@@ -216,5 +217,64 @@ export type TChoice = {
 
 export type TSubmitTestDto = {
    testId: string;
-   choices: Array<TChoice>;
+   choices: Array<TChoiceInput>;
 };
+
+export type TChoice = {
+   id: string;
+   answerId: string;
+   testUserId: string;
+   testUser: TTestUser;
+   answer: TAnswer;
+};
+
+export type TTopic = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   name: string;
+   parentId: string | null;
+   _count: {
+      topics: number;
+      words: number;
+   };
+   topics: TTopic[];
+   hasChildren: boolean;
+};
+
+export type TTopicQuery = Partial<{
+   page: number;
+   limit: number;
+   name: string;
+   parentId: string;
+}>;
+
+export type TTopicDto = Pick<TTopic, 'name' | 'parentId' | 'hasChildren'>;
+
+export type TWord = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   name: string;
+   meaning?: string;
+   definition?: string;
+   examples?: string[];
+   topicId: string;
+   topic: TTopic;
+   patchOfSpeech?: string;
+   note?: string;
+   audios: Array<{ src: string; region: string }>;
+   pronunciation?: string;
+   image?: string;
+};
+
+export type TWordDto = Omit<
+   TWord,
+   'id' | 'createdAt' | 'updatedAt' | 'topicId' | 'topic'
+>;
+
+export type TWordQuery = Partial<{
+   page: number;
+   limit: number;
+   name: string;
+}>;

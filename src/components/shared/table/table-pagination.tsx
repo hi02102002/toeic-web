@@ -29,7 +29,7 @@ export function DataTablePagination<TData>({
    showSelect = true,
 }: DataTablePaginationProps<TData>) {
    return (
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-2 md:flex-row flex-col gap-6">
          {showSelect && (
             <div className="flex items-center gap-2">
                <div className="flex-1 text-sm text-muted-foreground">
@@ -50,9 +50,12 @@ export function DataTablePagination<TData>({
             </div>
          )}
          <div
-            className={cn('flex items-center space-x-6 lg:space-x-8', {
-               'ml-auto': !showSelect,
-            })}
+            className={cn(
+               'flex items-center sm:space-x-6 lg:space-x-8 sm:flex-row flex-col space-y-6 sm:space-y-0',
+               {
+                  'ml-auto': !showSelect,
+               }
+            )}
          >
             <div className="flex items-center space-x-2">
                <p className="text-sm font-medium">Rows per page</p>

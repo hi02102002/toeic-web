@@ -1,17 +1,18 @@
-import { TChoice, TTest } from '@/types';
+import { TChoice, TChoiceInput, TTest } from '@/types';
 import React, { createContext, useContext, useState } from 'react';
 
-type TPracticeToiecCtx = {
-   choices: Array<TChoice>;
-   handleChoose: (choice: TChoice) => void;
+type TPracticeResultCtx = {
+   choices: Array<TChoiceInput>;
+   handleChoose: (choice: TChoiceInput) => void;
    handleSubmit: () => void;
-   isQuestionChose: (choice: TChoice) => boolean;
+   isQuestionChose: (choice: TChoiceInput) => boolean;
    marks: Array<string>;
    isMarked: (questionId: string) => boolean;
    toggleMark: (questionId: string) => void;
+   choicesResult: Array<TChoice>;
 };
 
-export const PracticeContext = createContext<TPracticeToiecCtx>({
+export const PracticeResultCtx = createContext<TPracticeResultCtx>({
    choices: [],
    handleChoose(choice) {},
    handleSubmit() {},
@@ -23,18 +24,24 @@ export const PracticeContext = createContext<TPracticeToiecCtx>({
       return true;
    },
    toggleMark(questionId) {},
+   choicesResult: [],
 });
 
 type Props = {
    testId: TTest['id'];
    children: React.ReactNode;
+   choicesResult: Array<TChoice>;
 };
 
-export const PracticeProvider = ({ children, testId }: Props) => {
-   const [choices, setChoices] = useState<TChoice[]>([]);
+export const PracticeResultProvider = ({
+   children,
+   testId,
+   choicesResult,
+}: Props) => {
+   const [choices, setChoices] = useState<TChoiceInput[]>([]);
    const [marks, setMarks] = useState<string[]>([]);
 
-   const isQuestionChose = (choice: TChoice) => {
+   const isQuestionChose = (choice: TChoiceInput) => {
       return choices.some((c) => c.questionId === choice.questionId);
    };
 
@@ -42,7 +49,7 @@ export const PracticeProvider = ({ children, testId }: Props) => {
       return marks.some((m) => m === questionId);
    };
 
-   const handleChoose = (choice: TChoice) => {
+   const handleChoose = (choice: TChoiceInput) => {
       if (isQuestionChose(choice)) {
          setChoices((prev) => {
             return prev.map((c) => {
@@ -77,7 +84,7 @@ export const PracticeProvider = ({ children, testId }: Props) => {
    };
 
    return (
-      <PracticeContext.Provider
+      <PracticeResultCtx.Provider
          value={{
             choices,
             handleChoose,
@@ -86,11 +93,19 @@ export const PracticeProvider = ({ children, testId }: Props) => {
             marks,
             isMarked,
             toggleMark,
+            choicesResult,
          }}
       >
          {children}
-      </PracticeContext.Provider>
+      </PracticeResultCtx.Provider>
    );
 };
 
-export const usePractice = () => useContext(PracticeContext);
+export const usePractice = () => {
+   const ctx = useContext(PracticeResultCtx);
+   if (ctx === undefined) {
+      throw new Error('Ctx without provider');
+   }
+
+   return ctx;
+};

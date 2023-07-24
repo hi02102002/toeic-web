@@ -58,8 +58,15 @@ class TestsService {
       return http.get(`/tests/parts/${id}`);
    }
 
-   getPractice(testId: string): Promise<TBaseResponse<TTest | null>> {
-      return http.get(`/tests/${testId}/practice`);
+   getPracticeOrWithExplain(
+      testId: string,
+      type: 'practice' | 'explain' = 'practice'
+   ): Promise<TBaseResponse<TTest | null>> {
+      return http.get(`/tests/${testId}/practice-result`, {
+         params: {
+            type,
+         },
+      });
    }
 
    submitTest(fields: TSubmitTestDto): Promise<TBaseResponse<TTestUser>> {
