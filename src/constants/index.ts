@@ -13,10 +13,11 @@ export const ROUTES = {
    SERVER_ERROR: '/500',
    DASHBOARD: '/dashboard',
    TOIEC_TEST: '/toiec-tests',
-   VOCABULARIES: '/vocabularies',
+   TOPICS: '/topics',
    GRAMMAR: '/grammar',
    SETTINGS: '/settings',
    BLOGS: '/blogs',
+   FLASHCARDS: '/flashcards',
    ADMIN: '/admin',
    ADMIN_USERS: '/admin/users',
    ADMIN_TOIEC_TESTS: '/admin/toiec-tests',
@@ -26,6 +27,10 @@ export const ROUTES = {
    ADMIN_WORDS: '/admin/words',
    ADMIN_GRAMMARS: '/admin/grammars',
    ADMIN_CHILDREN_QUESTIONS: '/admin/children-questions',
+   SETTINGS_ACCOUNT: '/settings/account',
+   SETTINGS_PAYMENT: '/settings/payment',
+   SETTINGS_PASSWORD: '/settings/change-password',
+   SETTINGS_LEARNING: '/settings/learning',
 };
 
 export const ROUTES_AUTH = [

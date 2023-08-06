@@ -15,36 +15,43 @@ const ToiecTests: NextPageWithLayout<Props> = ({ tests, total }) => {
    const router = useRouter();
 
    return (
-      <div className="container flex py-4">
-         <div className="flex flex-col flex-1 space-y-4">
-            <div className="flex-1">
-               <div className="grid grid-cols-4 gap-4">
+      <div className="container  py-4  space-y-4">
+         <h3 className="text-lg font-semibold">Toiec Tests</h3>
+         <div className="flex-1">
+            {tests.length > 0 ? (
+               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
                   {tests.map((test) => {
                      return <ToiecTestCard test={test} key={test.id} />;
                   })}
                </div>
-            </div>
-            <div className=" flex items-center justify-center">
-               <Pagination
-                  perPage={20}
-                  total={total}
-                  onPaginationChange={(value) => {
-                     router.push({
-                        pathname: router.pathname,
-                        query: {
-                           page: value + 1,
-                        },
-                     });
-                  }}
-               />
-            </div>
+            ) : (
+               <div className="flex items-center justify-center h-full">
+                  <span className="font-medium">Not have any tests</span>
+               </div>
+            )}
          </div>
+         <Pagination
+            perPage={20}
+            total={total}
+            onPaginationChange={(value) => {
+               router.push({
+                  pathname: router.pathname,
+                  query: {
+                     page: value + 1,
+                  },
+               });
+            }}
+         />
       </div>
    );
 };
 
 ToiecTests.getLayout = (page) => {
-   return <AppLayout>{page}</AppLayout>;
+   return (
+      <AppLayout title="Toiec Tests" description="List of toiec tests">
+         {page}
+      </AppLayout>
+   );
 };
 export const getServerSideProps = withRoute({
    isProtected: true,

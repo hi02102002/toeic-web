@@ -1,5 +1,6 @@
 import { topicsService, uploadService } from '@/services';
 import { TWordDto, TWordQuery } from '@/types';
+import { urlAudioWord } from '@/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 
@@ -13,23 +14,14 @@ export const useUpdateWord = (topicId: string, q?: TWordQuery) => {
          id: string;
          data: Partial<
             Omit<TWordDto, 'audios' | 'image'> & {
-               audioUK?: FileList | string;
-               audioUS?: FileList | string;
                image?: FileList | string;
             }
          >;
       }) => {
-         const [audioUK, audioUS, image] = await Promise.all([
-            data.audioUK?.[0] instanceof File
-               ? uploadService.upload(data.audioUK?.[0] as File)
-               : Promise.resolve(data.audioUK),
-            data.audioUS?.[0] instanceof File
-               ? uploadService.upload(data.audioUS?.[0] as File)
-               : Promise.resolve(data.audioUS),
+         const image =
             data.image?.[0] instanceof File
-               ? uploadService.upload(data.image?.[0] as File)
-               : Promise.resolve(data.image),
-         ]);
+               ? await uploadService.upload(data.image?.[0] as File)
+               : (data.image as string);
 
          const res = topicsService.updateWord(id, {
             definition: data.definition,
@@ -41,18 +33,15 @@ export const useUpdateWord = (topicId: string, q?: TWordQuery) => {
             pronunciation: data.pronunciation,
             audios: [
                {
-                  // @ts-ignore
-                  src: audioUK?.url || (audioUK as string),
+                  src: urlAudioWord(data.name as string, 1),
                   region: 'UK',
                },
                {
-                  // @ts-ignore
-                  src: (audioUS?.url as string) || (audioUS as string),
+                  src: urlAudioWord(data.name as string, 2),
                   region: 'US',
                },
-            ].filter((audio) => typeof audio.src === 'string'),
-            // @ts-ignore
-            image: image?.url || (image as string),
+            ],
+            image: typeof image === 'string' ? image : image?.url,
          });
 
          return res;

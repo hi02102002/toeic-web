@@ -8,11 +8,13 @@ type Props = {
 };
 
 export const TopicCard = ({ topic }: Props) => {
+   console.log(topic);
+   const link = topic.hasChild
+      ? `${ROUTES.TOPICS}?parentId=${topic.id}`
+      : `${ROUTES.TOPICS}/${topic.id}`;
+
    return (
-      <Link
-         href={`${ROUTES.VOCABULARIES}/${topic.id}`}
-         className="h-full block"
-      >
+      <Link href={link} className="h-full block">
          <div className="border border-border p-4 rounded relative cursor-pointer space-y-1 h-full">
             <span className="text-lg font-semibold line-clamp-1">
                {topic.name}

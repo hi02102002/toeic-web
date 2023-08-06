@@ -1,5 +1,5 @@
-import { Confirm } from '@/components/app';
-import CreateUpdateWord from '@/components/app/modal/create-update-word';
+import { Confirm, CreateUpdateWordFlashcard } from '@/components/app';
+
 import { AdminLayout } from '@/components/layouts/admin';
 import {
    Button,
@@ -202,7 +202,8 @@ const Words: NextPageWithLayout = (props: Props) => {
                   <DropdownMenuContent align="start">
                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                     <CreateUpdateWord
+                     <CreateUpdateWordFlashcard
+                        title="Update word"
                         onSubmit={async ({ values, close }) => {
                            await handleUpdateWord({
                               id: row.original.id,
@@ -220,13 +221,6 @@ const Words: NextPageWithLayout = (props: Props) => {
                            patchOfSpeech: row.original.patchOfSpeech,
                            pronunciation: row.original.pronunciation,
                            image: row.original.image,
-                           audioUK:
-                              row.original.audios?.find((audio) => {
-                                 return audio.region === 'UK';
-                              })?.src || '',
-                           audioUS: row.original.audios?.find((audio) => {
-                              return audio.region === 'US';
-                           })?.src,
                         }}
                      >
                         <DropdownMenuItem
@@ -237,7 +231,7 @@ const Words: NextPageWithLayout = (props: Props) => {
                            <IconEdit className="w-4 h-4 mr-2" />
                            Update{' '}
                         </DropdownMenuItem>
-                     </CreateUpdateWord>
+                     </CreateUpdateWordFlashcard>
 
                      <Confirm
                         title="Remove word"
@@ -304,14 +298,15 @@ const Words: NextPageWithLayout = (props: Props) => {
                      </Button>
                   )}
                </div>
-               <CreateUpdateWord
+               <CreateUpdateWordFlashcard
+                  title="Add new word"
                   onSubmit={async ({ values, close }) => {
                      await handleCreateWord(values);
                      close?.();
                   }}
                >
                   <Button variants="primary">Add new word</Button>
-               </CreateUpdateWord>
+               </CreateUpdateWordFlashcard>
             </div>
             <DataTable
                table={table}

@@ -140,6 +140,7 @@ const Register = () => {
                         className="w-full"
                         sizes="md"
                         isLoading={isLoading}
+                        type="submit"
                      >
                         Create your account
                      </Button>

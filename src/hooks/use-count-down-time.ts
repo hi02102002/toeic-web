@@ -1,5 +1,5 @@
 import { TIME_OF_TOIEC } from '@/constants';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const useCountDownTime = () => {
    const [time, setTime] = useState<number>(TIME_OF_TOIEC);
@@ -19,11 +19,8 @@ export const useCountDownTime = () => {
       };
    }, []);
 
-   return useMemo(
-      () => ({
-         time,
-         isFinished: time === 0,
-      }),
-      [time]
-   );
+   return {
+      time,
+      isFinished: time === 0,
+   };
 };

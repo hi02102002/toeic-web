@@ -41,9 +41,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-type Props = {};
-
-const Login = (props: Props) => {
+const Login = () => {
    const router = useRouter();
    const {
       register,

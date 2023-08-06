@@ -22,6 +22,12 @@ export enum PartType {
    PART7 = 'PART7',
 }
 
+export enum Provider {
+   GOOGLE = 'google.com',
+   FACEBOOK = 'facebook.com',
+   LOCAL = 'local',
+}
+
 export type TUser = {
    id: string;
    name: string;
@@ -78,7 +84,7 @@ export type TTestQuery = Partial<{
 export type TUploadRes = {
    asset_id: string;
    public_id: string;
-   version: 1686909569;
+   version: number;
    version_id: number;
    signature: string;
    width: number;
@@ -88,12 +94,12 @@ export type TUploadRes = {
    created_at: string;
    tags: Array<any>;
    pages: number;
-   bytes: 5787617;
+   bytes: number;
    type: string;
    etag: string;
    placeholder: boolean;
    url: string;
-   secure_url: 'string';
+   secure_url: string;
    playback_url: string;
    folder: string;
    audio: {
@@ -239,7 +245,7 @@ export type TTopic = {
       words: number;
    };
    topics: TTopic[];
-   hasChildren: boolean;
+   hasChild: boolean;
 };
 
 export type TTopicQuery = Partial<{
@@ -249,7 +255,7 @@ export type TTopicQuery = Partial<{
    parentId: string;
 }>;
 
-export type TTopicDto = Pick<TTopic, 'name' | 'parentId' | 'hasChildren'>;
+export type TTopicDto = Pick<TTopic, 'name' | 'parentId' | 'hasChild'>;
 
 export type TWord = {
    id: string;
@@ -274,6 +280,62 @@ export type TWordDto = Omit<
 >;
 
 export type TWordQuery = Partial<{
+   page: number;
+   limit: number;
+   name: string;
+}>;
+
+export type TFlashcard = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   name?: string;
+   meaning?: string;
+   definition?: string;
+   examples?: string[];
+   patchOfSpeech?: string;
+   note?: string;
+   pronunciation?: string;
+   image?: string;
+   deckId: string;
+   deck: TDeck;
+};
+
+export type TFlashcardDto = Omit<
+   TFlashcard,
+   'id' | 'createdAt' | 'updatedAt' | 'word' | 'deck' | 'deckId'
+> & {
+   wordId?: string;
+   deckId: string;
+};
+
+export type TFlashcardQuery = Partial<{
+   page: number;
+   limit: number;
+   name: string;
+   deckId: string;
+}>;
+
+export type TDeck = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   name: string;
+   userId: string;
+   user: TUser;
+   flashcards: TFlashcard[];
+   _count: {
+      flashcards: number;
+   };
+};
+
+export type TDeckFromTopicDto = {
+   topicId: string;
+   name: string;
+   wordIds: string[];
+};
+
+export type TDeckQuery = Partial<{
    page: number;
    limit: number;
    name: string;

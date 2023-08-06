@@ -13,7 +13,11 @@ export const getServerSideProps = withRoute({
 })();
 
 Dashboard.getLayout = (page) => {
-   return <AppLayout>{page}</AppLayout>;
+   return (
+      <AppLayout title="Toiec | Dashboard" description="Dashboard">
+         {page}
+      </AppLayout>
+   );
 };
 
 export default Dashboard;

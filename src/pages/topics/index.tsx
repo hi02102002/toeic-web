@@ -1,4 +1,4 @@
-import { TopicCard } from '@/components/app/vocabularies';
+import { TopicCard } from '@/components/app/topics';
 import { AppLayout } from '@/components/layouts/app';
 import { Pagination } from '@/components/shared';
 import { http_server } from '@/libs/axios';
@@ -11,11 +11,12 @@ type Props = {
    total: number;
 };
 
-const Vocabularies: NextPageWithLayout<Props> = ({ topics, total }) => {
+const Topics: NextPageWithLayout<Props> = ({ topics, total }) => {
    const router = useRouter();
    return (
       <div className="container py-4 space-y-4">
-         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+         <h3 className="text-lg font-semibold">Topics</h3>
+         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
             {topics.map((topic) => {
                return (
                   <li key={topic.id}>
@@ -33,7 +34,7 @@ const Vocabularies: NextPageWithLayout<Props> = ({ topics, total }) => {
                      pathname: router.pathname,
                      query: {
                         ...router.query,
-                        page: value,
+                        page: value + 1,
                         limit: 10,
                      },
                   });
@@ -44,8 +45,12 @@ const Vocabularies: NextPageWithLayout<Props> = ({ topics, total }) => {
    );
 };
 
-Vocabularies.getLayout = (page) => {
-   return <AppLayout>{page}</AppLayout>;
+Topics.getLayout = (page) => {
+   return (
+      <AppLayout title="Toeic | Topics" description="List of topics">
+         {page}
+      </AppLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({
@@ -66,6 +71,7 @@ export const getServerSideProps = withRoute({
       {
          page: (query.page as string) || 1,
          limit: (query.limit as string) || 10,
+         parentId: (query.parentId as string) || null,
       }
    );
 
@@ -77,4 +83,4 @@ export const getServerSideProps = withRoute({
    };
 });
 
-export default Vocabularies;
+export default Topics;

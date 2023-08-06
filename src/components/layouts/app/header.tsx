@@ -33,8 +33,12 @@ const NAV_LINKS = [
       href: ROUTES.TOIEC_TEST,
    },
    {
-      label: 'Vocabulary',
-      href: ROUTES.VOCABULARIES,
+      label: 'Topics',
+      href: ROUTES.TOPICS,
+   },
+   {
+      label: 'Flashcards',
+      href: ROUTES.FLASHCARDS,
    },
    {
       label: 'Grammars',
@@ -166,7 +170,7 @@ const AppHeader = () => {
                               <Link href={link.href}>
                                  <span
                                     className={cn(
-                                       'py-2 relative inline-block',
+                                       'py-2 relative inline-block font-medium',
                                        'after:content-[" "] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[2px] after:bg-primary after:w-full after:opacity-0 after:transition-all after:duration-300 after:ease-in-out',
                                        'hover:after:opacity-100',
                                        {

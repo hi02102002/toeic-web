@@ -94,3 +94,7 @@ export const millisToMinutesAndSeconds = (millis: number) => {
 export const idObjToArr = (obj: Record<string, boolean>) => {
    return Object.keys(obj).filter((key) => obj[key]);
 };
+
+export const urlAudioWord = (word: string, type: 1 | 2) => {
+   return `https://dict.youdao.com/dictvoice?audio=${word}&type=${type}`;
+};

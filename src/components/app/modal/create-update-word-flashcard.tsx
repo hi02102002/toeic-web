@@ -40,18 +40,22 @@ type Props = {
    defaultValues?: FormValues;
    children: React.ReactNode;
    type?: 'create' | 'update';
+   title?: string;
 };
 
 const schema = z.object({
    image: z.any().optional(),
-   audioUS: z.any().optional(),
-   audioUK: z.any().optional(),
    name: z.string().nonempty({
       message: 'Name is required',
    }),
-   definition: z.string().optional(),
+   definition: z.string().nonempty({
+      message: 'Definition is required',
+   }),
    meaning: z.string().optional(),
-   examples: z.array(z.string()).optional(),
+   examples: z
+      .array(z.string())
+      .max(5, 'You can only add 5 example')
+      .optional(),
    note: z.string().optional(),
    patchOfSpeech: z.string().optional(),
    pronunciation: z.string().optional(),
@@ -59,11 +63,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const CreateUpdateWord = ({
+export const CreateUpdateWordFlashcard = ({
    children,
    onSubmit,
    defaultValues,
    type,
+   title,
 }: Props) => {
    const form = useForm<FormValues>({
       resolver: zodResolver(schema),
@@ -90,8 +95,6 @@ const CreateUpdateWord = ({
          form.reset({
             examples: [],
             patchOfSpeech: '',
-            audioUK: undefined,
-            audioUS: undefined,
             image: undefined,
             name: '',
             definition: '',
@@ -100,33 +103,21 @@ const CreateUpdateWord = ({
             pronunciation: '',
          });
       },
+      open() {
+         form.setValue('examples', defaultValues?.examples || []);
+         form.setValue('patchOfSpeech', defaultValues?.patchOfSpeech || '');
+         form.setValue('image', defaultValues?.image || undefined);
+         form.setValue('name', defaultValues?.name || '');
+         form.setValue('definition', defaultValues?.definition || '');
+         form.setValue('meaning', defaultValues?.meaning || '');
+         form.setValue('note', defaultValues?.note || '');
+         form.setValue('pronunciation', defaultValues?.pronunciation || '');
+      },
    });
 
-   const audioUKRef = useRef<HTMLInputElement | null>(null);
-   const audioUSRef = useRef<HTMLInputElement | null>(null);
    const imageRef = useRef<HTMLInputElement | null>(null);
 
    useEffect(() => {
-      if (defaultValues?.audioUK) {
-         const file = new File([], defaultValues.audioUK);
-
-         const data = new DataTransfer();
-
-         data.items.add(file);
-
-         if (audioUKRef.current) audioUKRef.current.files = data.files;
-      }
-
-      if (defaultValues?.audioUS) {
-         const file = new File([], defaultValues.audioUS);
-
-         const data = new DataTransfer();
-
-         data.items.add(file);
-
-         if (audioUSRef.current) audioUSRef.current.files = data.files;
-      }
-
       if (defaultValues?.image) {
          const file = new File([], defaultValues.image);
 
@@ -149,9 +140,7 @@ const CreateUpdateWord = ({
          <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent>
             <DialogHeader>
-               <DialogTitle>
-                  {type === 'create' ? 'Create new' : 'Update'} word
-               </DialogTitle>
+               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
                <form
@@ -169,6 +158,25 @@ const CreateUpdateWord = ({
                               <FormLabel required>Name</FormLabel>
                               <FormControl>
                                  <Input placeholder="Name" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        );
+                     }}
+                  />
+                  <FormField
+                     name="definition"
+                     control={control}
+                     render={({ field }) => {
+                        return (
+                           <FormItem>
+                              <FormLabel required>Definition</FormLabel>
+                              <FormControl>
+                                 <TextArea
+                                    placeholder="Definition"
+                                    {...field}
+                                    className="resize-none"
+                                 />
                               </FormControl>
                               <FormMessage />
                            </FormItem>
@@ -221,62 +229,7 @@ const CreateUpdateWord = ({
                         );
                      }}
                   />
-                  <FormField
-                     control={control}
-                     name="audioUK"
-                     render={({
-                        field: { ref, onChange, value, ...field },
-                     }) => {
-                        return (
-                           <FormItem>
-                              <FormLabel>Audio UK</FormLabel>
-                              <FormControl>
-                                 <Input
-                                    type="file"
-                                    accept="audio/*"
-                                    {...field}
-                                    ref={(el) => {
-                                       ref(el);
-                                       audioUKRef.current = el;
-                                    }}
-                                    onChange={(e: any) => {
-                                       onChange(e.target.files);
-                                    }}
-                                 />
-                              </FormControl>
-                              <FormMessage />
-                           </FormItem>
-                        );
-                     }}
-                  />
 
-                  <FormField
-                     control={control}
-                     name="audioUS"
-                     render={({
-                        field: { ref, onChange, value, ...field },
-                     }) => {
-                        return (
-                           <FormItem>
-                              <FormLabel>Audio US</FormLabel>
-                              <FormControl>
-                                 <Input
-                                    type="file"
-                                    accept="audio/*"
-                                    {...field}
-                                    ref={(el) => {
-                                       ref(el);
-                                       audioUSRef.current = el;
-                                    }}
-                                    onChange={(e: any) => {
-                                       onChange(e.target.files);
-                                    }}
-                                 />
-                              </FormControl>
-                           </FormItem>
-                        );
-                     }}
-                  />
                   <FormField
                      name="patchOfSpeech"
                      control={control}
@@ -309,25 +262,7 @@ const CreateUpdateWord = ({
                         );
                      }}
                   />
-                  <FormField
-                     name="definition"
-                     control={control}
-                     render={({ field }) => {
-                        return (
-                           <FormItem>
-                              <FormLabel>Definition</FormLabel>
-                              <FormControl>
-                                 <TextArea
-                                    placeholder="Definition"
-                                    {...field}
-                                    className="resize-none"
-                                 />
-                              </FormControl>
-                              <FormMessage />
-                           </FormItem>
-                        );
-                     }}
-                  />
+
                   <FormField
                      name="meaning"
                      control={control}
@@ -385,7 +320,7 @@ const CreateUpdateWord = ({
                                              </FormControl>
                                              <Button
                                                 variants="danger"
-                                                className="w-10 h-10 p-0 flex-shrink-0"
+                                                className="flex-shrink-0 w-10 h-10 p-0"
                                                 type="button"
                                                 onClick={() => {
                                                    removeExample(index);
@@ -398,24 +333,29 @@ const CreateUpdateWord = ({
                                        </FormItem>
                                     );
                                  }}
+                                 rules={{
+                                    required: true,
+                                 }}
                               />
                            );
                         })}
                      </div>
-                     <Button
-                        onClick={() => {
-                           appendExample('');
-                        }}
-                        className="w-full"
-                        type="button"
-                     >
-                        {examplesFields.length === 0
-                           ? 'Add example'
-                           : 'Add another example'}
-                     </Button>
+                     {examplesFields.length < 5 && (
+                        <Button
+                           onClick={() => {
+                              appendExample('');
+                           }}
+                           className="w-full"
+                           type="button"
+                        >
+                           {examplesFields.length === 0
+                              ? 'Add example'
+                              : 'Add another example'}
+                        </Button>
+                     )}
                   </div>
                   <DialogFooter>
-                     <Button variants="outline" type="button">
+                     <Button variants="outline" type="button" onClick={onClose}>
                         Cancel
                      </Button>
                      <Button
@@ -433,4 +373,4 @@ const CreateUpdateWord = ({
    );
 };
 
-export default CreateUpdateWord;
+export default CreateUpdateWordFlashcard;

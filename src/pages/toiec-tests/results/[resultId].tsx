@@ -176,7 +176,12 @@ const ResultWithProvider: NextPageWithLayout<Props> = ({ result }) => {
 };
 
 ResultWithProvider.getLayout = (page) => {
-   return <AppLayout>{page}</AppLayout>;
+   console.log(page);
+   return (
+      <AppLayout title="Result" description="Result of test">
+         {page}
+      </AppLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({

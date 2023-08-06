@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 type Props = {
    total?: number;
-   onPaginationChange?: (value: any) => void;
+   onPaginationChange?: (value: number) => void;
    pageValue?: number;
    perPage?: number;
 };
@@ -29,9 +29,9 @@ export const Pagination = ({
 
    const pageCount = calcPageCount(total, perPage);
 
-   const hasNext = page + 1 !== pageCount;
+   const hasNext = page + 1 !== pageCount && pageCount !== 0;
 
-   const hasPrevious = page !== 0;
+   const hasPrevious = page !== 0 && pageCount !== 0;
 
    const handleNextPage = () => {
       if (!hasNext) return;

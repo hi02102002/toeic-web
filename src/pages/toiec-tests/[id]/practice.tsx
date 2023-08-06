@@ -10,6 +10,8 @@ import { NextPageWithLayout, TTest } from '@/types';
 import { withRoute } from '@/utils/withRoute';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
+import ReactPlayer from 'react-player';
 type Props = {
    test: TTest;
 };
@@ -17,6 +19,7 @@ type Props = {
 const Practice = ({ test }: Props) => {
    const { data, isLoading } = useToiec(test.id);
    const router = useRouter();
+   const playerRef = useRef<ReactPlayer | null>(null);
 
    return (
       <div className="container py-4 select-none">
@@ -42,10 +45,23 @@ const Practice = ({ test }: Props) => {
                </div>
             ) : (
                <div className="flex flex-col-reverse gap-4 lg:flex-row">
-                  <div className="flex-1">
-                     {data?.parts.map((part) => {
-                        return <Part key={part.id} part={part} />;
-                     })}
+                  <div className="flex flex-col gap-4">
+                     {data?.audio && (
+                        <div className="flex items-center justify-center ">
+                           <ReactPlayer
+                              url={data?.audio}
+                              controls
+                              height={64}
+                              playing={true}
+                              ref={playerRef}
+                           />
+                        </div>
+                     )}
+                     <div className="flex-1">
+                        {data?.parts.map((part) => {
+                           return <Part key={part.id} part={part} />;
+                        })}
+                     </div>
                   </div>
                   <QuestionsSidebar
                      parts={data?.parts || []}

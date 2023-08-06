@@ -59,6 +59,7 @@ module.exports = withTV({
          });
       },
       require('@tailwindcss/typography'),
+      require('tailwindcss-animate'),
    ],
    corePlugins: {
       container: false,

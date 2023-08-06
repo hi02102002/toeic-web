@@ -19,6 +19,7 @@ import {
    useDebounce,
    useRemoveTopics,
    useTopics,
+   useUpdateTopic,
 } from '@/hooks';
 import { NextPageWithLayout, TTopic, TTopicQuery } from '@/types';
 import { calcPageCount } from '@/utils';
@@ -62,8 +63,11 @@ const Topics: NextPageWithLayout = () => {
       useCreateTopic(q);
    const { mutateAsync: handleRemoveTopics, isLoading: isLoadingRemoveTopics } =
       useRemoveTopics(q);
+   const { mutateAsync: handleUpdateTopic, isLoading: isLoadingUpdateTopic } =
+      useUpdateTopic(q);
 
-   const isLoadingActions = isLoadingCreateTopic || isLoadingRemoveTopics;
+   const isLoadingActions =
+      isLoadingCreateTopic || isLoadingRemoveTopics || isLoadingUpdateTopic;
 
    const columns: ColumnDef<TTopic>[] = [
       {
@@ -110,7 +114,7 @@ const Topics: NextPageWithLayout = () => {
                   <DropdownMenuContent align="start">
                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
                      <DropdownMenuSeparator />
-                     {!router.query.parentId && row.original.hasChildren && (
+                     {row.original.hasChild && (
                         <DropdownMenuItem
                            onClick={() => {
                               router.push(
@@ -122,7 +126,7 @@ const Topics: NextPageWithLayout = () => {
                            View children
                         </DropdownMenuItem>
                      )}
-                     {(router.query.parentId || !row.original.hasChildren) && (
+                     {!row.original.hasChild && (
                         <DropdownMenuItem
                            onClick={() => {
                               router.push(
@@ -136,7 +140,15 @@ const Topics: NextPageWithLayout = () => {
                      )}
 
                      <CreateUpdateTopic
-                        onSubmit={async ({ name }, close) => {}}
+                        onSubmit={async ({ name }, close) => {
+                           await handleUpdateTopic({
+                              id: row.original.id,
+                              data: {
+                                 name,
+                              },
+                           });
+                           close?.();
+                        }}
                         type="update"
                      >
                         <DropdownMenuItem
@@ -153,6 +165,9 @@ const Topics: NextPageWithLayout = () => {
                         title="Remove Topic"
                         description={`Are you sure you want to remove ${row.original.name} ?`}
                         onConfirm={async (close) => {
+                           await handleRemoveTopics({
+                              [row.original.id]: true,
+                           });
                            close?.();
                         }}
                      >
@@ -220,7 +235,7 @@ const Topics: NextPageWithLayout = () => {
                   await handleCreateTopic({
                      name,
                      parentId: router.query.parentId as string,
-                     hasChildren,
+                     hasChild: hasChildren,
                   });
                   onClose?.();
                }}

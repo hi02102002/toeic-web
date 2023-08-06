@@ -6,7 +6,7 @@ import axios from 'axios';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 export const useLogout = () => {
-   const { setUser, user } = useUser();
+   const { user } = useUser();
    const router = useRouter();
    return useMutation({
       mutationFn: async () => {

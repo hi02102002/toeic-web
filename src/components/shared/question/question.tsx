@@ -1,10 +1,12 @@
 import { Button, RadioGroup, RadioGroupItem } from '@/components/shared';
+import { useAudioCtx } from '@/contexts/audio.ctx';
 import { useDisclosure } from '@/hooks';
 import { PartType, TChoice, TChoiceInput, TQuestion } from '@/types';
 import { cn } from '@/utils';
 import { IconFlag3, IconFlag3Filled } from '@tabler/icons-react';
 import parser from 'html-react-parser';
 import Image from 'next/image';
+import ReactPlayer from 'react-player';
 
 type Props = {
    question: TQuestion;
@@ -27,9 +29,13 @@ export const Question = ({
    choicesResult,
    toggleMark,
    isMarked,
-   choices,
 }: Props) => {
    const [showExplainAndTranscript, { onToggle }] = useDisclosure();
+   const { currentAudioId, setCurrentAudioId } = useAudioCtx();
+
+   const handlePlayAudio = () => {
+      setCurrentAudioId(`audio-${question.id}`);
+   };
 
    return (
       <div id={`question-${question.id}`} className="flex flex-col gap-2">
@@ -50,9 +56,20 @@ export const Question = ({
                   </Button>
                )}
          </div>
-         {question.audio && (
+         {question.audio && type === 'result' && (
             <div className="flex items-center justify-center">
-               <audio src={question.audio} controls />
+               <ReactPlayer
+                  url={question.audio}
+                  controls
+                  config={{
+                     file: {
+                        forceAudio: true,
+                     },
+                  }}
+                  height={54}
+                  playing={currentAudioId === `audio-${question.id}`}
+                  onPlay={handlePlayAudio}
+               />
             </div>
          )}
          {question.image && (

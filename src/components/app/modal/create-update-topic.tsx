@@ -21,6 +21,7 @@ import {
 } from '@/components/shared';
 import { useDisclosure } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
@@ -28,14 +29,11 @@ import * as zod from 'zod';
 const schema = zod.object({
    name: zod.string().nonempty('Topic name is required'),
    hasChildren: zod
-      .boolean()
+      .any()
       .default(false)
       .transform((value) => {
-         if (typeof value === 'string') {
-            if (value === 'true') return true;
-            else return false;
-         }
-         return value;
+         if (value === 'true') return true;
+         return false;
       }),
 });
 
@@ -63,6 +61,8 @@ export const CreateUpdateTopic = ({
       resolver: zodResolver(schema),
    });
 
+   const router = useRouter();
+
    const { isDirty } = form.formState;
 
    const [isOpen, { onClose, onOpen }] = useDisclosure(false, {
@@ -72,6 +72,9 @@ export const CreateUpdateTopic = ({
          });
       },
    });
+
+   console.log(!router.query.parentId && type === 'update');
+
    return (
       <Dialog
          open={isOpen}
@@ -107,30 +110,35 @@ export const CreateUpdateTopic = ({
                         </FormItem>
                      )}
                   />
-                  <FormField
-                     control={form.control}
-                     name="hasChildren"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel required>Have children topic?</FormLabel>
-                           <Select
-                              onValueChange={field.onChange}
-                              defaultValue={'false'}
-                           >
-                              <FormControl>
-                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select" />
-                                 </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                 <SelectItem value={'false'}>No</SelectItem>
-                                 <SelectItem value={'true'}>Yes</SelectItem>
-                              </SelectContent>
-                           </Select>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
+                  {!router.query.parentId && type !== 'update' && (
+                     <FormField
+                        control={form.control}
+                        name="hasChildren"
+                        render={({ field }) => (
+                           <FormItem>
+                              <FormLabel required>
+                                 Have children topic?
+                              </FormLabel>
+                              <Select
+                                 onValueChange={field.onChange}
+                                 defaultValue={'false'}
+                              >
+                                 <FormControl>
+                                    <SelectTrigger>
+                                       <SelectValue placeholder="Select" />
+                                    </SelectTrigger>
+                                 </FormControl>
+                                 <SelectContent>
+                                    <SelectItem value={'false'}>No</SelectItem>
+                                    <SelectItem value={'true'}>Yes</SelectItem>
+                                 </SelectContent>
+                              </Select>
+                              <FormMessage />
+                           </FormItem>
+                        )}
+                     />
+                  )}
+
                   <DialogFooter>
                      <Button
                         variants="secondary"

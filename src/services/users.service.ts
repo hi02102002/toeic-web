@@ -17,11 +17,15 @@ export class UsersService {
       });
    }
 
-   async updateUser(
+   updateUser(
       id: string,
       data: Partial<TUserDto>
    ): Promise<TBaseResponse<TUser>> {
       return http.patch(`/users/${id}`, data);
+   }
+
+   getMe(): Promise<TBaseResponse<TUser>> {
+      return http.get('/auth/me');
    }
 }
 

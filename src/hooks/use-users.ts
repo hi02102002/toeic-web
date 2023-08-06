@@ -9,5 +9,6 @@ export const useUsers = (q?: TUserQuery) => {
          const v = await usersService.getAllUsers(q);
          return v.data;
       },
+      keepPreviousData: true,
    });
 };

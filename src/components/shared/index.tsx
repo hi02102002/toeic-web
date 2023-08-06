@@ -1,3 +1,4 @@
+export * from './audio';
 export * from './avatar';
 export { default as Button } from './button';
 export * from './card';
@@ -17,3 +18,4 @@ export * from './scroll-area';
 export * from './scroll-top';
 export * from './select';
 export * from './tiptap';
+export * from './tooltip';
