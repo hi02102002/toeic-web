@@ -48,7 +48,7 @@ module.exports = withTV({
       },
    },
    plugins: [
-      function ({ addComponents }) {
+      function ({ addComponents, addUtilities }) {
          addComponents({
             '.container': {
                maxWidth: '1232px',
@@ -57,9 +57,24 @@ module.exports = withTV({
                width: '100%',
             },
          });
+         addUtilities({
+            '.backface-visible': {
+               'backface-visibility': 'visible',
+               '-moz-backface-visibility': 'visible',
+               '-webkit-backface-visibility': 'visible',
+               '-ms-backface-visibility': 'visible',
+            },
+            '.backface-hidden': {
+               'backface-visibility': 'hidden',
+               '-moz-backface-visibility': 'hidden',
+               '-webkit-backface-visibility': 'hidden',
+               '-ms-backface-visibility': 'hidden',
+            },
+         });
       },
       require('@tailwindcss/typography'),
       require('tailwindcss-animate'),
+      require('@tailwindcss/aspect-ratio'),
    ],
    corePlugins: {
       container: false,
