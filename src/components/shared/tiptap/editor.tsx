@@ -1,11 +1,15 @@
 import { cn } from '@/utils';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
+import Table from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
 import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Toolbar from './toolbar';
-
+import Underline from '@tiptap/extension-underline';
 type Props = {
    onChange?: (content: string) => void;
    value?: string;
@@ -17,7 +21,7 @@ export const Editor = ({ value, onChange, error }: Props) => {
       extensions: [
          StarterKit.configure({
             heading: {
-               levels: [3, 4, 5, 6],
+               levels: [2, 3, 4, 5, 6],
             },
          }),
          TextAlign.configure({
@@ -25,6 +29,13 @@ export const Editor = ({ value, onChange, error }: Props) => {
          }),
          Image,
          Highlight,
+         Table.configure({
+            resizable: true,
+         }),
+         TableRow,
+         TableHeader,
+         TableCell,
+         Underline,
       ],
       content: value || '',
       onUpdate({ editor }) {
@@ -47,7 +58,7 @@ export const Editor = ({ value, onChange, error }: Props) => {
          )}
       >
          <Toolbar editor={editor} />
-         <EditorContent editor={editor} className="px-2 prose w-full" />
+         <EditorContent editor={editor} className="w-full px-2 prose" />
       </div>
    );
 };

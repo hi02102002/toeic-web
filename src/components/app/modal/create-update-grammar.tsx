@@ -91,6 +91,7 @@ export const CreateUpdateGrammar = ({
                <form
                   className="space-y-4"
                   onSubmit={handleSubmit((data) => onSubmit(data, onClose))}
+                  id="grammar"
                >
                   <FormField
                      control={control}
@@ -126,18 +127,20 @@ export const CreateUpdateGrammar = ({
                         );
                      }}
                   />
-                  <DialogFooter>
-                     <Button variants="outline" type="button" onClick={onClose}>
-                        Cancel
-                     </Button>
-                     <Button
-                        variants="primary"
-                        disabled={!isDirty && type === 'update'}
-                     >
-                        {type === 'create' ? 'Create' : 'Save changes'}
-                     </Button>
-                  </DialogFooter>
                </form>
+               <DialogFooter>
+                  <Button variants="outline" type="button" onClick={onClose}>
+                     Cancel
+                  </Button>
+                  <Button
+                     variants="primary"
+                     disabled={!isDirty && type === 'update'}
+                     type="submit"
+                     form="grammar"
+                  >
+                     {type === 'create' ? 'Create' : 'Save changes'}
+                  </Button>
+               </DialogFooter>
             </Form>
          </DialogContent>
       </Dialog>

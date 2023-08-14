@@ -7,7 +7,7 @@ import {
    LoadingFullPage,
    Pagination,
 } from '@/components/shared';
-import { useCreateDeckFromTopic, useCreateFlashcard, useDecks } from '@/hooks';
+import { useCreateDeckFromTopic, useDecks } from '@/hooks';
 import { http_server } from '@/libs/axios';
 import { NextPageWithLayout, TBaseResponse, TTopic, TWord } from '@/types';
 import { withRoute } from '@/utils/withRoute';

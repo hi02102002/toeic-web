@@ -3,7 +3,7 @@ import {
    CreateUpdateDeck,
    CreateUpdateWordFlashcard,
 } from '@/components/app';
-import { FlashcardCard } from '@/components/app/flashcard';
+import { Flashcard, FlashcardCard } from '@/components/app/flashcard';
 import { AppLayout } from '@/components/layouts/app';
 import {
    Button,
@@ -43,6 +43,7 @@ import {
 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 type Props = {
    deck: TDeck;
@@ -184,26 +185,43 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                         Not found any flashcards
                      </div>
                   ) : (
-                     <ul className="space-y-4">
-                        {resFlashcards?.flashcards.map((flashcard) => {
-                           return (
-                              <li key={flashcard.id}>
-                                 <FlashcardCard
-                                    flashcard={flashcard}
-                                    onRemove={async (id) => {
-                                       await handleRemoveFlashcard(id);
-                                    }}
-                                    onUpdate={async (values) => {
-                                       await handleUpdateFlashcard({
-                                          data: values,
-                                          id: flashcard.id,
-                                       });
-                                    }}
-                                 />
-                              </li>
-                           );
-                        })}
-                     </ul>
+                     <>
+                        <Swiper className="max-w-3xl mx-auto">
+                           {resFlashcards?.flashcards.map((flashcard) => {
+                              return (
+                                 <SwiperSlide
+                                    key={flashcard.id}
+                                    className="p-4"
+                                 >
+                                    <Flashcard
+                                       flashcard={flashcard}
+                                       withButton={false}
+                                    />
+                                 </SwiperSlide>
+                              );
+                           })}
+                        </Swiper>
+                        <ul className="space-y-4">
+                           {resFlashcards?.flashcards.map((flashcard) => {
+                              return (
+                                 <li key={flashcard.id}>
+                                    <FlashcardCard
+                                       flashcard={flashcard}
+                                       onRemove={async (id) => {
+                                          await handleRemoveFlashcard(id);
+                                       }}
+                                       onUpdate={async (values) => {
+                                          await handleUpdateFlashcard({
+                                             data: values,
+                                             id: flashcard.id,
+                                          });
+                                       }}
+                                    />
+                                 </li>
+                              );
+                           })}
+                        </ul>
+                     </>
                   )}
                   <Pagination
                      total={resFlashcards?.total || 0}
@@ -211,6 +229,10 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                      perPage={20}
                      onPaginationChange={(page) => {
                         setPage(page);
+                        window.scrollTo({
+                           top: 0,
+                           behavior: 'smooth',
+                        });
                      }}
                   />
                </>

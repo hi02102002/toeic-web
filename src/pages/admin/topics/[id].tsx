@@ -214,7 +214,7 @@ const Words: NextPageWithLayout = (props: Props) => {
                         type="update"
                         defaultValues={{
                            name: row.original.name,
-                           definition: row.original.definition,
+                           definition: row.original.definition || '',
                            examples: row.original.examples,
                            meaning: row.original.meaning,
                            note: row.original.note,

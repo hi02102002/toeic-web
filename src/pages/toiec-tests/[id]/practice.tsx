@@ -63,10 +63,7 @@ const Practice = ({ test }: Props) => {
                         })}
                      </div>
                   </div>
-                  <QuestionsSidebar
-                     parts={data?.parts || []}
-                     onSubmit={() => {}}
-                  />
+                  <QuestionsSidebar parts={data?.parts || []} />
                </div>
             )}
          </div>
@@ -83,7 +80,14 @@ const PracticeWithProvider: NextPageWithLayout<Props> = ({ test }) => {
 };
 
 PracticeWithProvider.getLayout = (page) => {
-   return <AppLayout>{page}</AppLayout>;
+   return (
+      <AppLayout
+         title="Toiec | Practice"
+         description="This page is for practicing"
+      >
+         {page}
+      </AppLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({ isProtected: true })(

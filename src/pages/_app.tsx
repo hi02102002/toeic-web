@@ -12,7 +12,9 @@ import NextProgress from 'next-progress';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-
+import 'swiper/css';
+import 'swiper/css/virtual';
+import 'swiper/css/effect-creative';
 const ScrollTop = dynamic(
    () => import('@/components/shared').then((v) => v.ScrollTop),
    {

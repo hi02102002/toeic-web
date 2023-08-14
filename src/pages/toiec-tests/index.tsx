@@ -15,11 +15,11 @@ const ToiecTests: NextPageWithLayout<Props> = ({ tests, total }) => {
    const router = useRouter();
 
    return (
-      <div className="container  py-4  space-y-4">
+      <div className="container py-4 space-y-4">
          <h3 className="text-lg font-semibold">Toiec Tests</h3>
          <div className="flex-1">
             {tests.length > 0 ? (
-               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
                   {tests.map((test) => {
                      return <ToiecTestCard test={test} key={test.id} />;
                   })}

@@ -299,14 +299,38 @@ export type TFlashcard = {
    image?: string;
    deckId: string;
    deck: TDeck;
+   efactor: number;
+   n: number;
+   interval: number;
+   due: string;
+   lastReviewed: string | null;
+};
+
+export type TFlashcardWithAnswers = TFlashcard & {
+   answers?: TFlashcard[];
 };
 
 export type TFlashcardDto = Omit<
    TFlashcard,
-   'id' | 'createdAt' | 'updatedAt' | 'word' | 'deck' | 'deckId'
+   | 'id'
+   | 'createdAt'
+   | 'updatedAt'
+   | 'word'
+   | 'deck'
+   | 'deckId'
+   | 'efactor'
+   | 'n'
+   | 'interval'
+   | 'due'
+   | 'lastReviewed'
 > & {
    wordId?: string;
    deckId: string;
+   n?: number;
+   interval?: number;
+   due?: string;
+   lastReviewed?: string;
+   efactor?: number;
 };
 
 export type TFlashcardQuery = Partial<{
@@ -340,3 +364,8 @@ export type TDeckQuery = Partial<{
    limit: number;
    name: string;
 }>;
+
+export type TNavLink = {
+   href: string;
+   label: string;
+};

@@ -59,56 +59,64 @@ export const Word = ({ word, decks }: Props) => {
                      </Tooltip>
                   </TooltipProvider>
                </div>
-               <div className="flex flex-col gap-1">
-                  {word.pronunciation && <span>{word.pronunciation}</span>}
-                  {word.audios && word.audios.length > 0 && (
-                     <ul className="flex items-center gap-2">
-                        {word.audios.map((audio) => {
-                           return (
-                              <li
-                                 key={audio.src}
-                                 className="flex items-center gap-1"
-                              >
-                                 <span>{audio.region}</span>
-                                 <AudioWord src={audio.src} />
-                              </li>
-                           );
-                        })}
-                     </ul>
-                  )}
-                  {word.definition && (
+               <div className="flex items-center gap-4 justify-between">
+                  <div>
                      <div className="flex flex-col gap-1">
-                        <span className="font-medium">Definition: </span>
-                        <span>{word.definition}</span>
+                        {word.pronunciation && (
+                           <span>{word.pronunciation}</span>
+                        )}
+                        {word.audios && word.audios.length > 0 && (
+                           <ul className="flex items-center gap-2">
+                              {word.audios.map((audio) => {
+                                 return (
+                                    <li
+                                       key={audio.src}
+                                       className="flex items-center gap-1"
+                                    >
+                                       <span>{audio.region}</span>
+                                       <AudioWord src={audio.src} />
+                                    </li>
+                                 );
+                              })}
+                           </ul>
+                        )}
+                        {word.definition && (
+                           <div className="flex flex-col gap-1">
+                              <span className="font-medium">Definition: </span>
+                              <span>{word.definition}</span>
+                           </div>
+                        )}
+                        {word.note && (
+                           <div className="flex flex-col gap-1">
+                              <span className="font-medium">Note: </span>
+                              <span>{word.note}</span>
+                           </div>
+                        )}
                      </div>
-                  )}
-                  {word.note && (
-                     <div className="flex flex-col gap-1">
-                        <span className="font-medium">Note: </span>
-                        <span>{word.note}</span>
+                     {word.examples && word.examples.length > 0 && (
+                        <div className="flex flex-col gap-1">
+                           <span className="font-medium">Examples: </span>
+                           <ul>
+                              {word.examples.map((example) => {
+                                 return <li key={example}>{example}</li>;
+                              })}
+                           </ul>
+                        </div>
+                     )}
+                  </div>
+                  {word.image && (
+                     <div className="w-48">
+                        <div className="overflow-hidden rounded aspect-w-4 aspect-h-3">
+                           <Image
+                              src={word.image}
+                              alt={word.name}
+                              fill
+                              className="object-contain"
+                           />
+                        </div>
                      </div>
                   )}
                </div>
-               {word.image && (
-                  <div className="overflow-hidden rounded aspect-w-4 aspect-h-3">
-                     <Image
-                        src={word.image}
-                        alt={word.name}
-                        fill
-                        className="object-contain"
-                     />
-                  </div>
-               )}
-               {word.examples && word.examples.length > 0 && (
-                  <div className="flex flex-col gap-1">
-                     <span className="font-medium">Examples: </span>
-                     <ul>
-                        {word.examples.map((example) => {
-                           return <li key={example}>{example}</li>;
-                        })}
-                     </ul>
-                  </div>
-               )}
             </div>
          </div>
          {isLoadingCreateFlashcard && (

@@ -7,8 +7,11 @@ type Props = {
 
 const SettingsLayout = ({ children }: Props) => {
    return (
-      <AppLayout>
-         <div className="flex container gap-4 py-4">
+      <AppLayout
+         title="Settings"
+         description="Manage your account settings and set email preferences."
+      >
+         <div className="container flex gap-4 py-4">
             <div>
                <Sidebar />
             </div>

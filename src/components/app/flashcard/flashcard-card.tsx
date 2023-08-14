@@ -104,56 +104,66 @@ export const FlashcardCard = ({ flashcard, onRemove, onUpdate }: Props) => {
                   </DropdownMenuContent>
                </DropdownMenu>
             </div>
-            <div className="flex flex-col gap-1">
-               {flashcard.pronunciation && (
-                  <span>{flashcard.pronunciation}</span>
-               )}
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+               <div>
+                  <div className="flex flex-col gap-1">
+                     {flashcard.pronunciation && (
+                        <span>{flashcard.pronunciation}</span>
+                     )}
 
-               {flashcard.name && (
-                  <ul className="flex items-center gap-2">
-                     <li className="flex items-center gap-1">
-                        <span>UK</span>
-                        <AudioFlashcard src={urlAudioWord(flashcard.name, 1)} />
-                     </li>
-                     <li className="flex items-center gap-1">
-                        <span>US</span>
-                        <AudioFlashcard src={urlAudioWord(flashcard.name, 2)} />
-                     </li>
-                  </ul>
-               )}
-               {flashcard.definition && (
-                  <div className="flex flex-col gap-1">
-                     <span className="font-medium">Definition: </span>
-                     <span>{flashcard.definition}</span>
+                     {flashcard.name && (
+                        <ul className="flex items-center gap-2">
+                           <li className="flex items-center gap-1">
+                              <span>UK</span>
+                              <AudioFlashcard
+                                 src={urlAudioWord(flashcard.name, 1)}
+                              />
+                           </li>
+                           <li className="flex items-center gap-1">
+                              <span>US</span>
+                              <AudioFlashcard
+                                 src={urlAudioWord(flashcard.name, 2)}
+                              />
+                           </li>
+                        </ul>
+                     )}
+                     {flashcard.definition && (
+                        <div className="flex flex-col gap-1">
+                           <span className="font-medium">Definition: </span>
+                           <span>{flashcard.definition}</span>
+                        </div>
+                     )}
+                     {flashcard.note && (
+                        <div className="flex flex-col gap-1">
+                           <span className="font-medium">Note: </span>
+                           <span>{flashcard.note}</span>
+                        </div>
+                     )}
                   </div>
-               )}
-               {flashcard.note && (
-                  <div className="flex flex-col gap-1">
-                     <span className="font-medium">Note: </span>
-                     <span>{flashcard.note}</span>
+                  {flashcard.examples && flashcard.examples.length > 0 && (
+                     <div className="flex flex-col gap-1">
+                        <span className="font-medium">Examples: </span>
+                        <ul>
+                           {flashcard.examples.map((example) => {
+                              return <li key={example}>{example}</li>;
+                           })}
+                        </ul>
+                     </div>
+                  )}
+               </div>
+               {flashcard.image && (
+                  <div className="w-full sm:w-48">
+                     <div className="relative overflow-hidden aspect-w-4 aspect-h-3">
+                        <Image
+                           src={flashcard.image}
+                           alt={flashcard.name || ''}
+                           fill
+                           className="object-contain rounded"
+                        />
+                     </div>
                   </div>
                )}
             </div>
-            {flashcard.image && (
-               <div className="overflow-hidden rounded aspect-w-4 aspect-h-3">
-                  <Image
-                     src={flashcard.image}
-                     alt={flashcard.name || ''}
-                     fill
-                     className="object-contain"
-                  />
-               </div>
-            )}
-            {flashcard.examples && flashcard.examples.length > 0 && (
-               <div className="flex flex-col gap-1">
-                  <span className="font-medium">Examples: </span>
-                  <ul>
-                     {flashcard.examples.map((example) => {
-                        return <li key={example}>{example}</li>;
-                     })}
-                  </ul>
-               </div>
-            )}
          </div>
       </div>
    );

@@ -32,7 +32,7 @@ const Header = () => {
             }
          )}
       >
-         <div className="container w-full flex items-center justify-between">
+         <div className="container flex items-center justify-between w-full">
             <Link
                href={ROUTES.HOME}
                className="inline-flex items-center gap-2 "
@@ -40,9 +40,15 @@ const Header = () => {
                <IconBrandTether className="w-6 h-6" />
                <span className="text-xl font-semibold">Toiec</span>
             </Link>
-            <div>
+            <div className="flex gap-4">
+               <Link href={ROUTES.BLOGS} className="flex items-center gap-2">
+                  Blogs
+               </Link>
                {user ? (
-                  <Link href="/dashboard" className="flex items-center gap-2">
+                  <Link
+                     href={ROUTES.DASHBOARD}
+                     className="flex items-center gap-2"
+                  >
                      Get started
                      <IconArrowUpRight className="w-4 h-4 " />
                   </Link>

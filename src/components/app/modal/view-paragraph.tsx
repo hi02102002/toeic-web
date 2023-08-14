@@ -21,7 +21,7 @@ export const ViewParagraph = ({ children, paragraph }: Props) => {
             <DialogHeader>
                <DialogTitle>View Paragraph</DialogTitle>
             </DialogHeader>
-            <div className="prose">{parser(paragraph)}</div>
+            <div className="prose max-w-full">{parser(paragraph)}</div>
          </DialogContent>
       </Dialog>
    );

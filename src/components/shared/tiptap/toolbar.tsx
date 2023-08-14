@@ -1,10 +1,11 @@
-import { UploadImageTiptap } from '@/components/app';
+import { RowColTableEditor, UploadImageTiptap } from '@/components/app';
 import { cn } from '@/utils';
 import {
    IconAlignCenter,
    IconAlignLeft,
    IconAlignRight,
    IconBold,
+   IconH2,
    IconH3,
    IconH4,
    IconH5,
@@ -15,6 +16,8 @@ import {
    IconPhoto,
    IconQuote,
    IconStrikethrough,
+   IconTable,
+   IconUnderline,
 } from '@tabler/icons-react';
 import { Editor } from '@tiptap/react';
 import { ButtonHTMLAttributes } from 'react';
@@ -81,6 +84,12 @@ export const Toolbar = ({ editor }: Props) => {
             <IconItalic className="w-5 h-5" />
          </ButtonToggle>
          <ButtonToggle
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            isActivated={editor.isActive('underline')}
+         >
+            <IconUnderline className="w-5 h-5" />
+         </ButtonToggle>
+         <ButtonToggle
             onClick={() => editor.chain().focus().toggleStrike().run()}
             isActivated={editor.isActive('strike')}
          >
@@ -91,6 +100,14 @@ export const Toolbar = ({ editor }: Props) => {
             isActivated={editor.isActive('highlight')}
          >
             <IconHighlight className="w-5 h-5" />
+         </ButtonToggle>
+         <ButtonToggle
+            onClick={() =>
+               editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            isActivated={editor.isActive('heading', { level: 2 })}
+         >
+            <IconH2 className="w-5 h-5" />
          </ButtonToggle>
          <ButtonToggle
             onClick={() =>
@@ -142,6 +159,13 @@ export const Toolbar = ({ editor }: Props) => {
                </ButtonToggle>
             </div>
          </UploadImageTiptap>
+         <RowColTableEditor editor={editor}>
+            <div>
+               <ButtonToggle>
+                  <IconTable className="w-5 h-5" />
+               </ButtonToggle>
+            </div>
+         </RowColTableEditor>
       </div>
    );
 };

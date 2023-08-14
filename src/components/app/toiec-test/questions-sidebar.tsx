@@ -8,12 +8,11 @@ import {
    sumAllArr,
 } from '@/utils';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Confirm } from '../modal';
 
 type Props = {
    parts: TPart[];
-   onSubmit: () => void;
 };
 
 const Part = ({ part }: { part: TPart }) => {
@@ -44,7 +43,7 @@ const Part = ({ part }: { part: TPart }) => {
          >
             {part.name}
          </span>
-         <ul className="flex items-center flex-wrap gap-2">
+         <ul className="flex flex-wrap items-center gap-2">
             {part.questions.map((question, i) => {
                if (question.quesions.length > 0) {
                   arrLengthChildQuestions.push(
@@ -76,7 +75,7 @@ const Part = ({ part }: { part: TPart }) => {
                                        1}
                                  </Button>
                                  {isMarked(q.id) && (
-                                    <div className="absolute w-1 h-1  rounded-full bg-yellow-500 top-1 left-1"></div>
+                                    <div className="absolute w-1 h-1 bg-yellow-500 rounded-full top-1 left-1"></div>
                                  )}
                               </li>
                            );
@@ -103,7 +102,7 @@ const Part = ({ part }: { part: TPart }) => {
                         {numberContinueQuestion + i + 1}
                      </Button>
                      {isMarked(question.id) && (
-                        <div className="absolute w-1 h-1  rounded-full bg-yellow-500 top-1 left-1"></div>
+                        <div className="absolute w-1 h-1 bg-yellow-500 rounded-full top-1 left-1"></div>
                      )}
                   </li>
                );
@@ -113,21 +112,30 @@ const Part = ({ part }: { part: TPart }) => {
    );
 };
 
-export const QuestionsSidebar = ({ parts, onSubmit }: Props) => {
+export const QuestionsSidebar = ({ parts }: Props) => {
    const router = useRouter();
    const { isFinished, time } = useCountDownTime();
    const { choices } = usePractice();
    const { mutateAsync: handleSubmitTest, isLoading } = useSubmitTest();
 
+   useEffect(() => {
+      if (isFinished) {
+         handleSubmitTest({
+            testId: router.query.id as string,
+            choices,
+         });
+      }
+   }, [isFinished, handleSubmitTest, router.query.id, choices]);
+
    return (
       <>
-         <div className="w-full lg:w-52 flex-shrink-0 space-y-4  ">
+         <div className="flex-shrink-0 w-full space-y-4 lg:w-52 ">
             <span className="text-xl font-medium">{choices.length} / 200</span>
             <div>
                <span className="text-xl font-medium">
                   The rest of the time:
                </span>
-               <span className="text-xl font-medium block">
+               <span className="block text-xl font-medium">
                   {millisToMinutesAndSeconds(time)}
                </span>
             </div>
@@ -143,7 +151,7 @@ export const QuestionsSidebar = ({ parts, onSubmit }: Props) => {
                   close?.();
                }}
             >
-               <Button variants="primary" className="h-9 w-full">
+               <Button variants="primary" className="w-full h-9">
                   Submit
                </Button>
             </Confirm>
