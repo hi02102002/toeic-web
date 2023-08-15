@@ -2,6 +2,7 @@ import { http } from '@/libs/axios';
 import {
    TBaseResponse,
    TFlashcard,
+   TFlashcardChart,
    TFlashcardDto,
    TFlashcardQuery,
 } from '@/types';
@@ -33,6 +34,14 @@ class FlashcardsService {
 
    deleteFlashcard(id: string): Promise<TBaseResponse<null>> {
       return http.delete(`/flashcards/${id}`);
+   }
+
+   getFlashcardChart(
+      q?: TFlashcardQuery
+   ): Promise<TBaseResponse<Array<TFlashcardChart>>> {
+      return http.get('/flashcards/chart', {
+         params: q,
+      });
    }
 }
 

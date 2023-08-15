@@ -40,3 +40,4 @@ export * from './use-update-topic';
 export * from './use-update-word';
 export * from './use-users';
 export * from './use-window-size';
+export * from './use-flashcards-chart';

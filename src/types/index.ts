@@ -369,3 +369,15 @@ export type TNavLink = {
    href: string;
    label: string;
 };
+
+export type TFlashcardQueryChart = {
+   deckId?: string;
+   dateStart?: string;
+   dateEnd?: string;
+};
+
+export type TFlashcardChart = {
+   date: string;
+   learned: number;
+   reviewed: number;
+};

@@ -14,7 +14,7 @@ const handleRefreshToken = async (refreshToken: string) => {
       accessToken: string;
       refreshToken: string;
    }> = await axios
-      .post(`http://localhost:3000/api/refresh-token`, {
+      .post(`/api/refresh-token`, {
          refreshToken,
       })
       .then((r) => r.data);

@@ -3,7 +3,7 @@ import {
    CreateUpdateDeck,
    CreateUpdateWordFlashcard,
 } from '@/components/app';
-import { Flashcard, FlashcardCard } from '@/components/app/flashcard';
+import { FlashcardCard } from '@/components/app/flashcard';
 import { AppLayout } from '@/components/layouts/app';
 import {
    Button,
@@ -20,6 +20,7 @@ import { ROUTES } from '@/constants';
 import {
    useCreateFlashcard,
    useDeck,
+   useFlashcardsChart,
    useRemoveDeck,
    useRemoveFlashcard,
    useUpdateDeck,
@@ -43,8 +44,16 @@ import {
 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
+import {
+   Bar,
+   BarChart,
+   CartesianGrid,
+   Legend,
+   ResponsiveContainer,
+   Tooltip,
+   XAxis,
+   YAxis,
+} from 'recharts';
 type Props = {
    deck: TDeck;
 };
@@ -79,6 +88,11 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
       mutateAsync: handleRemoveFlashcard,
       isLoading: isLoadingRemoveFlashcard,
    } = useRemoveFlashcard(q);
+
+   const { data: resFlashcardsChart, isLoading: isLoadingFlashcardsChart } =
+      useFlashcardsChart({
+         deckId: initDeck.id,
+      });
 
    const isLoadingActions =
       isLoadingRemoveDeck ||
@@ -174,7 +188,7 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                   </DropdownMenuContent>
                </DropdownMenu>
             </div>
-            {isLoadingFlashcards ? (
+            {isLoadingFlashcards || isLoadingFlashcardsChart ? (
                <div className="flex items-center justify-center">
                   <IconLoader2 className="w-5 h-5 animate-spin" />
                </div>
@@ -186,21 +200,29 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                      </div>
                   ) : (
                      <>
-                        <Swiper className="max-w-3xl mx-auto">
-                           {resFlashcards?.flashcards.map((flashcard) => {
-                              return (
-                                 <SwiperSlide
-                                    key={flashcard.id}
-                                    className="p-4"
-                                 >
-                                    <Flashcard
-                                       flashcard={flashcard}
-                                       withButton={false}
-                                    />
-                                 </SwiperSlide>
-                              );
-                           })}
-                        </Swiper>
+                        <div className="h-96">
+                           <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                 width={500}
+                                 height={300}
+                                 data={resFlashcardsChart || []}
+                                 margin={{
+                                    top: 5,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                 }}
+                              >
+                                 <CartesianGrid strokeDasharray="3 3" />
+                                 <XAxis dataKey="date" />
+                                 <YAxis />
+                                 <Tooltip wrapperClassName="rounded border-border border" />
+                                 <Legend />
+                                 <Bar dataKey="learned" fill="#27272a" />
+                                 <Bar dataKey="reviewed" fill="#7f7f80" />
+                              </BarChart>
+                           </ResponsiveContainer>
+                        </div>
                         <ul className="space-y-4">
                            {resFlashcards?.flashcards.map((flashcard) => {
                               return (
