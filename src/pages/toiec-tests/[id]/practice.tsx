@@ -4,13 +4,15 @@ import { AppLayout } from '@/components/layouts/app';
 import { Button } from '@/components/shared';
 import { ROUTES } from '@/constants';
 import { PracticeResultProvider } from '@/contexts/practice-toiec.ctx';
+import { useUser } from '@/contexts/user.ctx';
 import { useToiec } from '@/hooks';
 import { http_server } from '@/libs/axios';
+import { usersService } from '@/services';
 import { NextPageWithLayout, TTest } from '@/types';
 import { withRoute } from '@/utils/withRoute';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 type Props = {
    test: TTest;
@@ -20,6 +22,31 @@ const Practice = ({ test }: Props) => {
    const { data, isLoading } = useToiec(test.id);
    const router = useRouter();
    const playerRef = useRef<ReactPlayer | null>(null);
+   const { setUser } = useUser();
+
+   useEffect(() => {
+      usersService.startTest().then((v) => {
+         setUser((prev) => {
+            if (!prev) return prev;
+            return {
+               ...prev,
+               isTesting: true,
+            };
+         });
+      });
+      return () => {
+         usersService.finishTest().then(() => {
+            setUser((prev) => {
+               if (!prev) return prev;
+               return {
+                  ...prev,
+                  isTesting: false,
+               };
+            });
+         });
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    return (
       <div className="container py-4 select-none">
@@ -91,7 +118,16 @@ PracticeWithProvider.getLayout = (page) => {
 };
 
 export const getServerSideProps = withRoute({ isProtected: true })(
-   async ({ ctx, access_token, refresh_token }) => {
+   async ({ ctx, access_token, refresh_token, user }) => {
+      if (user?.isTesting) {
+         return {
+            redirect: {
+               destination: ROUTES.TOIEC_TEST,
+               permanent: false,
+            },
+         };
+      }
+
       const id = ctx.params?.id as string;
       const getTest = async () => {
          const res = await http_server<TTest | null>(

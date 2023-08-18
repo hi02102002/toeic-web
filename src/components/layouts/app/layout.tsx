@@ -21,7 +21,7 @@ const NAV_LINKS: Array<TNavLink> = [
    },
    {
       label: 'Grammars',
-      href: ROUTES.GRAMMAR,
+      href: ROUTES.GRAMMARS,
    },
    {
       label: 'Blogs',

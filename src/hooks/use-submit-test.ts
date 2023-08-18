@@ -1,5 +1,6 @@
 import { ROUTES } from '@/constants';
-import { testsService } from '@/services';
+import { useUser } from '@/contexts/user.ctx';
+import { testsService, usersService } from '@/services';
 import { TSubmitTestDto } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -7,9 +8,21 @@ import { toast } from 'react-hot-toast';
 
 export const useSubmitTest = () => {
    const router = useRouter();
+   const { setUser } = useUser();
    return useMutation({
       mutationFn: async (fields: TSubmitTestDto) => {
          const res = await testsService.submitTest(fields);
+         await usersService.finishTest();
+         setUser((prev) => {
+            if (prev) {
+               return {
+                  ...prev,
+                  isTesting: false,
+               };
+            }
+            return prev;
+         });
+
          return res.data;
       },
       onSuccess(data, variables, context) {

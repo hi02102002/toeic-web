@@ -1,4 +1,5 @@
 import { ROUTES } from '@/constants';
+import { useUser } from '@/contexts/user.ctx';
 import { TDeck } from '@/types';
 import { IconBoxMultiple } from '@tabler/icons-react';
 import Link from 'next/link';

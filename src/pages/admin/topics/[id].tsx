@@ -237,6 +237,9 @@ const Words: NextPageWithLayout = (props: Props) => {
                         title="Remove word"
                         description={`Are you sure you want to remove ${row.original.name} ?`}
                         onConfirm={async (close) => {
+                           await handleRemoveWords({
+                              [row.original.id]: true,
+                           });
                            close?.();
                         }}
                      >

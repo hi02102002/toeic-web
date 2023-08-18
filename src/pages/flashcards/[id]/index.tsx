@@ -3,7 +3,7 @@ import {
    CreateUpdateDeck,
    CreateUpdateWordFlashcard,
 } from '@/components/app';
-import { FlashcardCard } from '@/components/app/flashcard';
+import { FlashcardCard, FlashcardChart } from '@/components/app/flashcard';
 import { AppLayout } from '@/components/layouts/app';
 import {
    Button,
@@ -44,16 +44,6 @@ import {
 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import {
-   Bar,
-   BarChart,
-   CartesianGrid,
-   Legend,
-   ResponsiveContainer,
-   Tooltip,
-   XAxis,
-   YAxis,
-} from 'recharts';
 type Props = {
    deck: TDeck;
 };
@@ -200,29 +190,7 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                      </div>
                   ) : (
                      <>
-                        <div className="h-96">
-                           <ResponsiveContainer width="100%" height="100%">
-                              <BarChart
-                                 width={500}
-                                 height={300}
-                                 data={resFlashcardsChart || []}
-                                 margin={{
-                                    top: 5,
-                                    right: 30,
-                                    left: 20,
-                                    bottom: 5,
-                                 }}
-                              >
-                                 <CartesianGrid strokeDasharray="3 3" />
-                                 <XAxis dataKey="date" />
-                                 <YAxis />
-                                 <Tooltip wrapperClassName="rounded border-border border" />
-                                 <Legend />
-                                 <Bar dataKey="learned" fill="#27272a" />
-                                 <Bar dataKey="reviewed" fill="#7f7f80" />
-                              </BarChart>
-                           </ResponsiveContainer>
-                        </div>
+                        <FlashcardChart />
                         <ul className="space-y-4">
                            {resFlashcards?.flashcards.map((flashcard) => {
                               return (

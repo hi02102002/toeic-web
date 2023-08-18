@@ -13,9 +13,6 @@ import {
    FormLabel,
    FormMessage,
    Input,
-   InputLabel,
-   InputMessage,
-   InputWrapper,
    Select,
    SelectContent,
    SelectItem,
@@ -32,10 +29,8 @@ type Props = {
    onSubmit: ({
       values,
       close,
-      resetForm,
    }: {
       values: FormValues;
-      resetForm?: () => void;
       close?: () => void;
    }) => void;
 
@@ -103,7 +98,11 @@ export const CreateUpdateCommonQuestion = ({
       name: 'answers',
    });
 
-   const [isOpen, { onClose, onOpen }] = useDisclosure();
+   const [isOpen, { onClose, onOpen }] = useDisclosure(false, {
+      close() {
+         reset();
+      },
+   });
 
    return (
       <Dialog
@@ -117,39 +116,42 @@ export const CreateUpdateCommonQuestion = ({
             <div>{children}</div>
          </DialogTrigger>
          <DialogContent className="my-4">
+            <DialogHeader>
+               <DialogTitle>
+                  {type === 'create' ? 'Create' : 'Update'} Question
+               </DialogTitle>
+            </DialogHeader>
             <Form {...form}>
                <form
                   className="space-y-4"
                   onSubmit={handleSubmit((data) => {
                      onSubmit({
                         values: data,
-                        resetForm: () => {
-                           reset();
-                        },
-                        close: () => {
-                           onClose();
-                        },
+
+                        close: onClose,
                      });
                   })}
                >
-                  <DialogHeader>
-                     <DialogTitle>
-                        {type === 'create' ? 'Create' : 'Update'} Question
-                     </DialogTitle>
-                  </DialogHeader>
-
-                  <InputWrapper>
-                     <InputLabel required>Question</InputLabel>
-                     <Input
-                        placeholder="Enter question"
-                        {...register('text')}
-                     />
-                     {errors.text && (
-                        <InputMessage className="text-red-500">
-                           {errors.text?.message as string}
-                        </InputMessage>
-                     )}
-                  </InputWrapper>
+                  <FormField
+                     name="text"
+                     control={control}
+                     render={({ field }) => {
+                        return (
+                           <FormItem className="w-full">
+                              <FormLabel required>Question</FormLabel>
+                              <FormControl>
+                                 <Input
+                                    placeholder="Enter question"
+                                    className="w-full resize-none"
+                                    {...field}
+                                    error={Boolean(errors.text?.message)}
+                                 />
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        );
+                     }}
+                  />
 
                   {fields.map((field, index) => {
                      return (
@@ -248,6 +250,7 @@ export const CreateUpdateCommonQuestion = ({
                      <Button
                         variants="primary"
                         disabled={!isDirty && type === 'update'}
+                        type="submit"
                      >
                         {type === 'create' ? 'Create' : 'Save changes'}
                      </Button>

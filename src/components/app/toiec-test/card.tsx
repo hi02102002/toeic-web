@@ -1,8 +1,10 @@
 import { ROUTES } from '@/constants';
+import { useUser } from '@/contexts/user.ctx';
 import { TTest } from '@/types';
 import { isNew } from '@/utils';
 import { IconClockHour2 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
 import { Confirm } from '../modal';
 
 type Props = {
@@ -11,10 +13,17 @@ type Props = {
 
 export const ToiecTestCard = ({ test }: Props) => {
    const router = useRouter();
+   const { user } = useUser();
 
    return (
       <Confirm
          onConfirm={async (onClose) => {
+            if (user?.isTesting) {
+               toast.error(
+                  'You are testing another test. Please reload page. Or try again later'
+               );
+               return;
+            }
             await router.push(`${ROUTES.TOIEC_TEST}/${test.id}/practice`);
             onClose?.();
          }}

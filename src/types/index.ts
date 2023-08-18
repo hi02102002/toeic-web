@@ -39,6 +39,7 @@ export type TUser = {
    provider: string;
    roles: string[];
    status: UserStatus;
+   isTesting: boolean;
 };
 
 export type TTest = {

@@ -11,5 +11,6 @@ export const useToiec = (
          const res = await testsService.getPracticeOrWithExplain(testId, type);
          return res.data;
       },
+      staleTime: Infinity,
    });
 };

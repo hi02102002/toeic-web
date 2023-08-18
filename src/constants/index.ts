@@ -14,7 +14,7 @@ export const ROUTES = {
    DASHBOARD: '/dashboard',
    TOIEC_TEST: '/toiec-tests',
    TOPICS: '/topics',
-   GRAMMAR: '/grammar',
+   GRAMMARS: '/grammars',
    SETTINGS: '/settings',
    BLOGS: '/blogs',
    FLASHCARDS: '/flashcards',

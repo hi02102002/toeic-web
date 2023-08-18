@@ -96,7 +96,7 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
                         <DropdownMenuSeparator />
                         <CreateUpdateCommonQuestion
                            type="update"
-                           onSubmit={async ({ close, values, resetForm }) => {
+                           onSubmit={async ({ close, values }) => {
                               await handleUpdateQuestion({
                                  data: {
                                     ...values,
@@ -108,6 +108,7 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
                                  },
                                  id: row.original.id,
                               });
+                              close?.();
                            }}
                            defaultValues={{
                               text: row.original.text,
@@ -127,6 +128,12 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
                         <Confirm
                            title="Are you sure?"
                            description="You will not be able to recover this question!"
+                           onConfirm={async (onClose) => {
+                              await handleRemoveQuestions({
+                                 [row.original.id]: true,
+                              });
+                              onClose?.();
+                           }}
                         >
                            <DropdownMenuItem
                               onSelect={(e) => {
@@ -143,7 +150,7 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
             },
          },
       ],
-      [handleUpdateQuestion]
+      [handleUpdateQuestion, handleRemoveQuestions]
    );
 
    const pagination = useMemo(
@@ -180,7 +187,7 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
                   Questions of {grammar?.name}
                </h3>
                <CreateUpdateCommonQuestion
-                  onSubmit={async ({ values, close, resetForm }) => {
+                  onSubmit={async ({ values, close }) => {
                      await handleCreateQuestion({
                         grammarId: router.query.id as string,
                         explain: values.explain,
@@ -191,7 +198,6 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
                         })),
                      });
                      close?.();
-                     resetForm?.();
                   }}
                >
                   <Button variants="primary">Create question</Button>

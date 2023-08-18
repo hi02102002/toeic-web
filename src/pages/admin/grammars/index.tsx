@@ -186,7 +186,6 @@ const Grammars: NextPageWithLayout = () => {
                               await handleRemoveGrammars({
                                  [row.original.id]: true,
                               });
-
                               onClose?.();
                            }}
                         >

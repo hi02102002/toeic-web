@@ -27,6 +27,14 @@ export class UsersService {
    getMe(): Promise<TBaseResponse<TUser>> {
       return http.get('/auth/me');
    }
+
+   startTest(): Promise<TBaseResponse<TUser>> {
+      return http.post('/users/start-test');
+   }
+
+   finishTest(): Promise<TBaseResponse<TUser>> {
+      return http.post('/users/finish-test');
+   }
 }
 
 export const usersService = new UsersService();

@@ -1,5 +1,5 @@
 import { CreateUpdateDeck } from '@/components/app';
-import { DeckCard } from '@/components/app/flashcard';
+import { DeckCard, FlashcardChart } from '@/components/app/flashcard';
 import { AppLayout } from '@/components/layouts/app';
 import { Button, LoadingFullPage, Pagination } from '@/components/shared';
 import { useCreateDeck } from '@/hooks';
@@ -19,6 +19,12 @@ const Flashcards: NextPageWithLayout<Props> = ({ decks, total }) => {
       useCreateDeck();
    return (
       <div className="container py-4 space-y-4">
+         <div className="space-y-4">
+            <h3 className="text-lg font-semibold">
+               Your Flashcards Statistics
+            </h3>
+            <FlashcardChart />
+         </div>
          <div className="flex items-center justify-between gap-4">
             <h3 className="text-lg font-semibold">Your Decks</h3>
             <CreateUpdateDeck

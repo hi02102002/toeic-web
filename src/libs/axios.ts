@@ -14,7 +14,7 @@ const handleRefreshToken = async (refreshToken: string) => {
       accessToken: string;
       refreshToken: string;
    }> = await axios
-      .post(`/api/refresh-token`, {
+      .post(`http://localhost:3000/api/refresh-token`, {
          refreshToken,
       })
       .then((r) => r.data);
@@ -94,7 +94,6 @@ const http_server = async <T = unknown>(
       const res = await httpCallApi<T>(url, accessToken as string, query);
       return res;
    } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 401) {
          const data = await handleRefreshToken(refreshToken as string);
 
