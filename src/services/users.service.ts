@@ -1,5 +1,14 @@
 import { http } from '@/libs/axios';
-import { TBaseResponse, TUser, TUserDto, TUserQuery } from '@/types';
+import {
+   TBaseResponse,
+   TPasswordChangeDto,
+   TProfileDto,
+   TUser,
+   TUserDto,
+   TUserLearningSetting,
+   TUserLearningSettingDto,
+   TUserQuery,
+} from '@/types';
 
 export class UsersService {
    getAllUsers(q?: TUserQuery): Promise<
@@ -34,6 +43,28 @@ export class UsersService {
 
    finishTest(): Promise<TBaseResponse<TUser>> {
       return http.post('/users/finish-test');
+   }
+
+   getSetting(): Promise<TBaseResponse<TUserLearningSetting>> {
+      return http.get(`/settings`);
+   }
+
+   updateSetting(
+      data: TUserLearningSettingDto
+   ): Promise<TBaseResponse<TUserLearningSetting>> {
+      return http.patch(`/settings`, data);
+   }
+
+   updateProfile(data: TProfileDto): Promise<TBaseResponse<TUser>> {
+      return http.patch(`/auth/update-profile`, data);
+   }
+
+   changePassword(data: TPasswordChangeDto) {
+      return http.post('/users/change-password', data);
+   }
+
+   deletePersonalAccount() {
+      return http.delete('/users/personal-account');
    }
 }
 

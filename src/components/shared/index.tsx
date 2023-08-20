@@ -21,5 +21,6 @@ export * from './scroll-top';
 export * from './select';
 export * from './sheet';
 export * from './sidebar';
+export * from './switch';
 export * from './tiptap';
 export * from './tooltip';

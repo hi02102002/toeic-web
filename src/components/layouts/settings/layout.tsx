@@ -12,10 +12,8 @@ const SettingsLayout = ({ children }: Props) => {
          description="Manage your account settings and set email preferences."
       >
          <div className="container flex gap-4 py-4">
-            <div>
-               <Sidebar />
-            </div>
-            <div className="h-[100000px]">{children}</div>
+            <Sidebar />
+            {children}
          </div>
       </AppLayout>
    );

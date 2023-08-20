@@ -192,6 +192,8 @@ export type TGrammarDto = Pick<TGrammar, 'theory' | 'name'>;
 
 export type TUserDto = Pick<TUser, 'avatar' | 'name' | 'status'>;
 
+export type TProfileDto = Partial<Pick<TUser, 'avatar' | 'name'>>;
+
 export type TUserQuery = Partial<{
    page: number;
    status: UserStatus | 'ALL';
@@ -381,4 +383,29 @@ export type TFlashcardChart = {
    date: string;
    learned: number;
    reviewed: number;
+};
+
+export type TUserLearningSetting = {
+   id: string;
+   createdAt: string;
+   updatedAt: string;
+   maxFlashcardPerDay: number;
+   maxReviewPerDay: number;
+   isShuffle: boolean;
+   autoPlayAudio: boolean;
+   timePerFlashcard: boolean;
+   userId: string;
+};
+
+export type TUserLearningSettingDto = Partial<
+   Pick<
+      TUserLearningSetting,
+      'autoPlayAudio' | 'maxFlashcardPerDay' | 'maxReviewPerDay'
+   >
+>;
+
+export type TPasswordChangeDto = {
+   oldPassword: string;
+   newPassword: string;
+   confirmPassword: string;
 };

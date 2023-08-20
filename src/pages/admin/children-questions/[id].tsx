@@ -83,7 +83,7 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                         <DropdownMenuSeparator />
                         <CreateUpdateCommonQuestion
                            type="update"
-                           onSubmit={async ({ close, values, resetForm }) => {
+                           onSubmit={async ({ close, values }) => {
                               await handleUpdateQuestion({
                                  data: {
                                     answers: values.answers.map((answer) => ({
@@ -98,6 +98,7 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                                  },
                                  id: row.original.id,
                               });
+                              close?.();
                            }}
                            defaultValues={{
                               text: row.original.text,
@@ -149,7 +150,7 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                <h3 className="text-lg font-semibold">Sub questions</h3>
                <CreateUpdateCommonQuestion
                   type="create"
-                  onSubmit={async ({ close, values, resetForm }) => {
+                  onSubmit={async ({ close, values }) => {
                      await handleCreateQuestion({
                         partType: question?.part.type as PartType,
                         parentId: question?.id as string,
@@ -158,7 +159,6 @@ const ChildrenQuestions: NextPageWithLayout<Props> = ({
                         explain: values.explain,
                      });
                      close?.();
-                     resetForm?.();
                   }}
                >
                   <Button variants="primary">Create questions</Button>

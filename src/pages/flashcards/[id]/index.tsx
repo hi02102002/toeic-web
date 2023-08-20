@@ -20,7 +20,6 @@ import { ROUTES } from '@/constants';
 import {
    useCreateFlashcard,
    useDeck,
-   useFlashcardsChart,
    useRemoveDeck,
    useRemoveFlashcard,
    useUpdateDeck,
@@ -78,11 +77,6 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
       mutateAsync: handleRemoveFlashcard,
       isLoading: isLoadingRemoveFlashcard,
    } = useRemoveFlashcard(q);
-
-   const { data: resFlashcardsChart, isLoading: isLoadingFlashcardsChart } =
-      useFlashcardsChart({
-         deckId: initDeck.id,
-      });
 
    const isLoadingActions =
       isLoadingRemoveDeck ||
@@ -178,7 +172,7 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                   </DropdownMenuContent>
                </DropdownMenu>
             </div>
-            {isLoadingFlashcards || isLoadingFlashcardsChart ? (
+            {isLoadingFlashcards ? (
                <div className="flex items-center justify-center">
                   <IconLoader2 className="w-5 h-5 animate-spin" />
                </div>

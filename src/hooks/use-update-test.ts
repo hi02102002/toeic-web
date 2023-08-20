@@ -1,5 +1,5 @@
 import { testsService, uploadService } from '@/services';
-import { TTestQuery } from '@/types';
+import { TTestQuery, TUploadRes } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
@@ -15,14 +15,15 @@ export const useUpdateTest = (q?: TTestQuery) => {
          audio: string | FileList;
       }) => {
          const { id, name, audio } = data;
-         const _audio = audio
-            ? await uploadService.upload(audio?.[0] as File)
-            : undefined;
+         const _audio =
+            typeof audio === 'string'
+               ? audio
+               : await uploadService.upload(audio?.[0] as File);
 
          const res = await testsService.updateTest(
             id,
             name,
-            _audio?.url as string
+            typeof audio === 'string' ? audio : (_audio as TUploadRes).url
          );
          return res;
       },

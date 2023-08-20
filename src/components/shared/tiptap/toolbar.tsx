@@ -52,7 +52,7 @@ export const Toolbar = ({ editor }: Props) => {
    if (!editor) return null;
 
    return (
-      <div className="flex flex-wrap items-center gap-2 p-2 border-b-2 border-border ">
+      <div className="sticky top-[-16px] left-0 right-0 z-50 flex flex-wrap items-center gap-2 p-2 border-b-2 border-border bg-bg ">
          <ButtonToggle
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
             isActivated={editor.isActive('textAlign', { align: 'left' })}
