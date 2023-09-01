@@ -15,7 +15,7 @@ const Topics: NextPageWithLayout<Props> = ({ topics, total }) => {
    const router = useRouter();
    return (
       <div className="container py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Topics</h3>
+         <h3 className="text-xl font-semibold">Topics</h3>
          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
             {topics.map((topic) => {
                return (

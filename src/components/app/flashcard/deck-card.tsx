@@ -1,5 +1,4 @@
 import { ROUTES } from '@/constants';
-import { useUser } from '@/contexts/user.ctx';
 import { TDeck } from '@/types';
 import { IconBoxMultiple } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -15,7 +14,7 @@ export const DeckCard = ({ deck }: Props) => {
             <span className="text-lg font-semibold line-clamp-1">
                {deck.name}
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
                <IconBoxMultiple className="w-4 h-4" />
                {deck._count.flashcards > 0 ? (
                   <span>

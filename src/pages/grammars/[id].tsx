@@ -27,25 +27,32 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar }: Props) => {
          </div>
 
          <div className="space-y-4 ">
-            <h3 className="text-lg font-semibold">Exercises</h3>
-            <ul className="space-y-4">
-               {data?.questions.map((question, index) => {
-                  return (
-                     <li key={question.id}>
-                        <Question question={question} order={index + 1} />
-                     </li>
-                  );
-               })}
-            </ul>
+            <h3 className="text-xl font-semibold">Exercises</h3>
+            {data?.questions && data.questions.length > 0 ? (
+               <ul className="space-y-4">
+                  {data?.questions.map((question, index) => {
+                     return (
+                        <li key={question.id}>
+                           <Question question={question} order={index + 1} />
+                        </li>
+                     );
+                  })}
+               </ul>
+            ) : (
+               <p className="text-center">
+                  This grammar does not have any exercises
+               </p>
+            )}
          </div>
       </div>
    );
 };
 
 Grammar.getLayout = (page) => {
+   console.log(page.props);
    return (
       <AppLayout
-         title="Toiec | Grammar"
+         title={`Toiec | ${page.props.grammar.name}`}
          description="This page helps you to learn grammar. You can learn grammar by topic. "
       >
          {page}

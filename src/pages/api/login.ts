@@ -44,6 +44,7 @@ export default async function handler(
 
       return res.status(405).json({ message: 'Method not allowed' });
    } catch (error) {
+      console.log(error)
       if (error instanceof AxiosError) {
          return res.status(error.response?.status || 500).json({
             message: error.response?.data.message || 'Internal server error',

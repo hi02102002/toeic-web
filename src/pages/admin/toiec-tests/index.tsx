@@ -241,22 +241,23 @@ const Tests: NextPageWithLayout = () => {
    return (
       <>
          <div className="py-4 space-y-4">
-            <h3 className="text-lg font-semibold">Tests Management</h3>
+            <h3 className="text-xl font-semibold">Tests Management</h3>
             <div className="space-y-4">
-               <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-4">
+               <div className="flex items-center justify-between w-full md:flex-row flex-col gap-4">
+                  <div className="flex items-center gap-4 w-full md:flex-row flex-col">
                      <Input
                         className="w-full"
                         placeholder="Search"
                         value={search}
                         onChange={(e: any) => setSearch(e.target.value)}
-                        classNameContainer="max-w-xs"
+                        classNameContainer="md:max-w-xs w-full"
                      />
                      {search && (
                         <Button
                            leftIcon={<IconX />}
                            variants="outline"
                            onClick={() => setSearch('')}
+                           className="w-full md:w-auto"
                         >
                            Reset
                         </Button>
@@ -272,7 +273,11 @@ const Tests: NextPageWithLayout = () => {
                         close?.();
                      }}
                   >
-                     <Button leftIcon={<IconPlus />} variants="primary">
+                     <Button
+                        leftIcon={<IconPlus />}
+                        variants="primary"
+                        className="flex-shrink-0 w-full md:w-auto"
+                     >
                         Create test
                      </Button>
                   </CreateUpdateTest>

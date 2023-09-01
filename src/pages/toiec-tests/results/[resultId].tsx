@@ -1,4 +1,5 @@
-import { Confirm, Part } from '@/components/app';
+import { Confirm } from '@/components/app';
+import { Part } from '@/components/app/toiec-test';
 import { AppLayout } from '@/components/layouts/app';
 import { Avatar, Button, Progress } from '@/components/shared';
 import { ROUTES } from '@/constants';
@@ -22,7 +23,7 @@ const Result = ({ result }: Props) => {
    return (
       <div className="container py-4 space-y-4">
          <div className="flex flex-col justify-between gap-4 md:items-center md:flex-row">
-            <h3 className="text-lg font-semibold md:">
+            <h3 className="text-xl font-semibold md:">
                Result of {result.test.name}
             </h3>
             <Confirm

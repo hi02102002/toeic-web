@@ -7,8 +7,10 @@ export const useCreateTest = (q?: TQuestionQuery) => {
    return useMutation({
       mutationFn: async (fields: TTestDto) => {
          const audio = fields.audio
-            ? await uploadService.upload(fields.audio?.[0] as File)
-            : undefined;
+            ? typeof fields.audio === 'string'
+               ? { url: fields.audio }
+               : await uploadService.upload(fields.audio[0])
+            : null;
 
          return await testsService.createTest({
             name: fields.name,

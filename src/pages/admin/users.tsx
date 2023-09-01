@@ -163,12 +163,12 @@ const Users: NextPageWithLayout = () => {
 
    return (
       <div className="py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Users</h3>
-         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 w-full">
+         <h3 className="text-xl font-semibold">Users</h3>
+         <div className="flex items-center justify-between sm:flex-row flex-col gap-4">
+            <div className="flex items-center gap-4 w-full sm:flex-row flex-col ">
                <Input
                   placeholder="Search"
-                  classNameContainer="max-w-xs"
+                  classNameContainer="sm:max-w-xs w-full"
                   value={search}
                   onChange={(e: any) => setSearch(e.target.value)}
                />
@@ -177,6 +177,7 @@ const Users: NextPageWithLayout = () => {
                      leftIcon={<IconX />}
                      variants="outline"
                      onClick={() => setSearch('')}
+                     className="sm:w-auto w-full"
                   >
                      Reset
                   </Button>
@@ -188,7 +189,7 @@ const Users: NextPageWithLayout = () => {
                   setStatus(value as UserStatus | 'ALL');
                }}
             >
-               <SelectTrigger className="w-[180px]">
+               <SelectTrigger className="sm:w-[180px] w-full">
                   <SelectValue placeholder="Select a fruit" />
                </SelectTrigger>
                <SelectContent>

@@ -1,4 +1,5 @@
 import {
+   Question,
    QuestionAudio,
    QuestionExplainAndTranscript,
    QuestionImage,
@@ -31,92 +32,96 @@ export const QuestionWrapper = ({
 
    return (
       <div id={`question-${question.id}`}>
-         <div className="flex items-center justify-between">
-            <QuestionOrder order={order} />
+         <Question>
+            <div className="flex items-center justify-between">
+               <QuestionOrder order={order} />
+               {type !== 'result' && (
+                  <QuestionMark
+                     question={question}
+                     isMarked={isMarked}
+                     toggleMark={toggleMark}
+                  />
+               )}
+            </div>
+            {type === 'result' && <QuestionAudio question={question} />}
+            <QuestionImage question={question} />
+            <QuestionText question={question} />
+            <div>
+               {question.answers.length > 0 && (
+                  <RadioGroup
+                     onValueChange={(value) => {
+                        handleChoose?.({
+                           answerId: value,
+                           partType,
+                           questionId: question.id,
+                        });
+                     }}
+                     className={cn({
+                        'pointer-events-none': type === 'result',
+                     })}
+                  >
+                     {question.answers.map((answer) => {
+                        const yourChoice = choicesResult?.find(
+                           (c) => c.answer.id === answer.id
+                        );
+                        return (
+                           <div
+                              key={answer.id}
+                              className="flex items-center gap-2"
+                           >
+                              {type === 'result' ? (
+                                 <>
+                                    <RadioGroupItem
+                                       value={answer.id}
+                                       id={`answer-${answer.id}`}
+                                       className={cn({
+                                          'text-green-500': answer.isCorrect,
+                                          'text-red-500':
+                                             !answer.isCorrect && yourChoice,
+                                       })}
+                                       checked={
+                                          answer.isCorrect ||
+                                          Boolean(yourChoice)
+                                       }
+                                    />
+                                    <label
+                                       htmlFor={`answer-${answer.id}`}
+                                       className={cn('cursor-pointer', {
+                                          'pointer-events-none':
+                                             type === 'result',
+                                          ' text-red-500':
+                                             !answer.isCorrect && yourChoice,
+                                          'text-green-500': answer.isCorrect,
+                                       })}
+                                    >
+                                       {answer.content}
+                                    </label>
+                                 </>
+                              ) : (
+                                 <>
+                                    <RadioGroupItem
+                                       value={answer.id}
+                                       id={`answer-${answer.id}`}
+                                    />
+                                    <label htmlFor={`answer-${answer.id}`}>
+                                       {answer.content}
+                                    </label>
+                                 </>
+                              )}
+                           </div>
+                        );
+                     })}
+                  </RadioGroup>
+               )}
+            </div>
             {type === 'result' && (
-               <QuestionMark
+               <QuestionExplainAndTranscript
                   question={question}
-                  isMarked={isMarked}
-                  toggleMark={toggleMark}
+                  isShow={showExplainAndTranscript}
+                  onToggle={onToggle}
                />
             )}
-         </div>
-         {type === 'result' && <QuestionAudio question={question} />}
-         <QuestionImage question={question} />
-         <QuestionText question={question} />
-         <div>
-            {question.answers.length > 0 && (
-               <RadioGroup
-                  onValueChange={(value) => {
-                     handleChoose?.({
-                        answerId: value,
-                        partType,
-                        questionId: question.id,
-                     });
-                  }}
-                  className={cn({
-                     'pointer-events-none': type === 'result',
-                  })}
-               >
-                  {question.answers.map((answer) => {
-                     const yourChoice = choicesResult?.find(
-                        (c) => c.answer.id === answer.id
-                     );
-                     return (
-                        <div
-                           key={answer.id}
-                           className="flex items-center gap-2"
-                        >
-                           {type === 'result' ? (
-                              <>
-                                 <RadioGroupItem
-                                    value={answer.id}
-                                    id={`answer-${answer.id}`}
-                                    className={cn({
-                                       'text-green-500': answer.isCorrect,
-                                       'text-red-500':
-                                          !answer.isCorrect && yourChoice,
-                                    })}
-                                    checked={
-                                       answer.isCorrect || Boolean(yourChoice)
-                                    }
-                                 />
-                                 <label
-                                    htmlFor={`answer-${answer.id}`}
-                                    className={cn('cursor-pointer', {
-                                       'pointer-events-none': type === 'result',
-                                       ' text-red-500':
-                                          !answer.isCorrect && yourChoice,
-                                       'text-green-500': answer.isCorrect,
-                                    })}
-                                 >
-                                    {answer.content}
-                                 </label>
-                              </>
-                           ) : (
-                              <>
-                                 <RadioGroupItem
-                                    value={answer.id}
-                                    id={`answer-${answer.id}`}
-                                 />
-                                 <label htmlFor={`answer-${answer.id}`}>
-                                    {answer.content}
-                                 </label>
-                              </>
-                           )}
-                        </div>
-                     );
-                  })}
-               </RadioGroup>
-            )}
-         </div>
-         {type === 'result' && (
-            <QuestionExplainAndTranscript
-               question={question}
-               isShow={showExplainAndTranscript}
-               onToggle={onToggle}
-            />
-         )}
+         </Question>
       </div>
    );
 };

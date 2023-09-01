@@ -208,7 +208,7 @@ const Topics: NextPageWithLayout = () => {
 
    return (
       <div className="py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Topics</h3>
+         <h3 className="text-xl font-semibold">Topics</h3>
          <div className="flex items-center justify-between">
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-4">

@@ -1,5 +1,6 @@
 import { LoadingFullPage } from '@/components/shared';
 import { ROUTES_AUTH } from '@/constants';
+import { useStartFinishTest } from '@/hooks/use-start-finish-test';
 import { http } from '@/libs/axios';
 import { TBaseResponse, TUser } from '@/types';
 import { useRouter } from 'next/router';
@@ -33,6 +34,7 @@ export const UserProvider = ({
    const [user, setUser] = useState<TUser | null>(initUser);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const router = useRouter();
+   useStartFinishTest();
 
    const handelFetchUser = useCallback(async () => {
       if (

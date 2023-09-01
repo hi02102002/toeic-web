@@ -1,7 +1,8 @@
 import { LadingPageLayout } from '@/components/layouts/lading-page';
 import { Button } from '@/components/shared';
 import { useUser } from '@/contexts/user.ctx';
-import { NextPageWithLayout } from '@/types';
+import { http_server } from '@/libs/axios';
+import { NextPageWithLayout, TBaseResponse, TDeck } from '@/types';
 import { withRoute } from '@/utils/withRoute';
 import { Inter } from 'next/font/google';
 import { useRouter } from 'next/router';

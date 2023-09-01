@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
          <DialogPrimitive.Content
             ref={ref}
             className={cn(
-               'relative z-50 grid w-full gap-4 rounded-b border bg-bg p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg sm:rounded sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
+               'relative z-50 grid w-full gap-4 rounded border bg-bg p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg sm:rounded sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 ',
                className
             )}
             {...props}
@@ -89,7 +89,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
    <div
       className={cn(
-         'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+         'flex flex-col-reverse sm:flex-row sm:justify-end gap-4',
          className
       )}
       {...props}

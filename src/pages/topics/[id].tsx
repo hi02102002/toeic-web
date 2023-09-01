@@ -72,7 +72,7 @@ const Vocabularies: NextPageWithLayout<Props> = ({ total, words, topic }) => {
          </div>
          <div className="flex items-start justify-between gap-4">
             <div>
-               <h3 className="text-lg font-semibold line-clamp-1">
+               <h3 className="text-xl font-semibold line-clamp-1">
                   Topic: {topic.name}
                </h3>
                <span>

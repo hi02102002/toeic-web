@@ -1,4 +1,8 @@
-import { Confirm, CreateUpdateWordFlashcard } from '@/components/app';
+import {
+   Confirm,
+   CreateUpdateWordFlashcard,
+   ImportJson,
+} from '@/components/app';
 
 import { AdminLayout } from '@/components/layouts/admin';
 import {
@@ -17,6 +21,7 @@ import { DataTable } from '@/components/shared/table';
 import {
    useCreateWord,
    useDebounce,
+   useImportWords,
    useRemoveWords,
    useUpdateWord,
 } from '@/hooks';
@@ -29,7 +34,7 @@ import {
    TWord,
    TWordQuery,
 } from '@/types';
-import { calcPageCount } from '@/utils';
+import { calcPageCount, urlAudioWord } from '@/utils';
 import { withRoute } from '@/utils/withRoute';
 import { IconDots, IconEdit, IconTrash, IconX } from '@tabler/icons-react';
 import {
@@ -66,8 +71,13 @@ const Words: NextPageWithLayout = (props: Props) => {
       useUpdateWord(router.query.id as string, query);
    const { mutateAsync: handleRemoveWords, isLoading: isLoadingRemoveWords } =
       useRemoveWords(router.query.id as string, query);
+   const { mutateAsync: handleImportWords, isLoading: isLoadingImportWords } =
+      useImportWords(query);
    const isLoadingAction =
-      isLoadingCreateWord || isLoadingUpdateWord || isLoadingRemoveWords;
+      isLoadingCreateWord ||
+      isLoadingUpdateWord ||
+      isLoadingRemoveWords ||
+      isLoadingImportWords;
 
    const columns: ColumnDef<TWord>[] = [
       {
@@ -124,14 +134,15 @@ const Words: NextPageWithLayout = (props: Props) => {
          accessorKey: 'audios',
          header: 'Audios',
          cell({ row }) {
-            return row.original.audios && row.original.audios.length > 0 ? (
-               <span className="block space-y-2 whitespace-nowrap break-keep">
-                  {row.original.audios?.map((audio) => (
-                     <audio key={audio.src} src={audio.src} controls />
-                  ))}
-               </span>
-            ) : (
-               <span>N/A</span>
+            return (
+               <div>
+                  <span className="block space-y-2 whitespace-nowrap break-keep">
+                     <audio src={urlAudioWord(row.original.name, 1)} controls />
+                  </span>
+                  <span className="block space-y-2 whitespace-nowrap break-keep">
+                     <audio src={urlAudioWord(row.original.name, 2)} controls />
+                  </span>
+               </div>
             );
          },
       },
@@ -280,7 +291,7 @@ const Words: NextPageWithLayout = (props: Props) => {
 
    return (
       <div className="py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Words</h3>
+         <h3 className="text-xl font-semibold">Words</h3>
          <div className="space-y-4">
             <div className="flex items-center justify-between w-full">
                <div className="flex items-center gap-4">
@@ -301,15 +312,29 @@ const Words: NextPageWithLayout = (props: Props) => {
                      </Button>
                   )}
                </div>
-               <CreateUpdateWordFlashcard
-                  title="Add new word"
-                  onSubmit={async ({ values, close }) => {
-                     await handleCreateWord(values);
-                     close?.();
-                  }}
-               >
-                  <Button variants="primary">Add new word</Button>
-               </CreateUpdateWordFlashcard>
+               <div className="flex items-center gap-4">
+                  <CreateUpdateWordFlashcard
+                     title="Add new word"
+                     onSubmit={async ({ values, close }) => {
+                        await handleCreateWord(values);
+                        close?.();
+                     }}
+                  >
+                     <Button variants="primary">Add new word</Button>
+                  </CreateUpdateWordFlashcard>
+                  <ImportJson
+                     onConfirm={async ({ json, close }) => {
+                        await handleImportWords({
+                           topicId: router.query.id as string,
+                           json,
+                        });
+
+                        close?.();
+                     }}
+                  >
+                     <Button variants="primary">Import (JSON)</Button>
+                  </ImportJson>
+               </div>
             </div>
             <DataTable
                table={table}

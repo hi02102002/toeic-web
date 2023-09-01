@@ -22,13 +22,14 @@ import {
    IconLayoutKanban,
    IconLogout,
    IconMenu2,
+   IconReportAnalytics,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 type Props = {
-   navLinks: Array<TNavLink>;
+   navLinks?: Array<TNavLink>;
 };
 
 export const Header = ({ navLinks }: Props) => {
@@ -76,7 +77,7 @@ export const Header = ({ navLinks }: Props) => {
                      className="inline-flex items-center gap-2 "
                   >
                      <IconBrandTether className="w-6 h-6" />
-                     <span className="text-xl font-semibold">
+                     <span className="text-2xl font-semibold">
                         {isAdmin && routerAdmin ? 'Admin' : 'Toiec'}
                      </span>
                   </Link>
@@ -144,7 +145,15 @@ export const Header = ({ navLinks }: Props) => {
                                           Back to site
                                        </DropdownMenuItem>
                                     )}
-
+                                    <DropdownMenuItem
+                                       className="font-medium"
+                                       onClick={() =>
+                                          handleNavigate(ROUTES.RESULT_TEST)
+                                       }
+                                    >
+                                       <IconReportAnalytics className="w-4 h-4 mr-2" />
+                                       Results test
+                                    </DropdownMenuItem>
                                     {!routerAdmin && (
                                        <DropdownMenuItem
                                           className="font-medium"
@@ -169,7 +178,7 @@ export const Header = ({ navLinks }: Props) => {
                            </DropdownMenu>
                         </div>
                         <div className="cursor-pointer md:hidden ">
-                           <Sidebar navLinks={navLinks}>
+                           <Sidebar navLinks={navLinks || []}>
                               <Button
                                  className="!w-9 !h-9 p-0"
                                  variants="outline"
@@ -181,32 +190,34 @@ export const Header = ({ navLinks }: Props) => {
                      </>
                   )}
                </div>
-               <nav className="hidden h-12 md:block">
-                  <ul className="flex items-center gap-2">
-                     {navLinks.map((link) => {
-                        const isActive = router.pathname === link.href;
+               {navLinks && (
+                  <nav className="hidden h-12 md:block">
+                     <ul className="flex items-center gap-2">
+                        {navLinks.map((link) => {
+                           const isActive = router.pathname === link.href;
 
-                        return (
-                           <li key={link.href}>
-                              <Link href={link.href}>
-                                 <span
-                                    className={cn(
-                                       'py-2 relative inline-block',
-                                       'after:content-[" "] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[2px] after:bg-primary after:w-full after:opacity-0 after:transition-all after:duration-300 after:ease-in-out',
-                                       'hover:after:opacity-100 font-medium',
-                                       {
-                                          'after:opacity-100': isActive,
-                                       }
-                                    )}
-                                 >
-                                    {link.label}
-                                 </span>
-                              </Link>
-                           </li>
-                        );
-                     })}
-                  </ul>
-               </nav>
+                           return (
+                              <li key={link.href}>
+                                 <Link href={link.href}>
+                                    <span
+                                       className={cn(
+                                          'py-2 relative inline-block',
+                                          'after:content-[" "] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[2px] after:bg-primary after:w-full after:opacity-0 after:transition-all after:duration-300 after:ease-in-out',
+                                          'hover:after:opacity-100 font-medium',
+                                          {
+                                             'after:opacity-100': isActive,
+                                          }
+                                       )}
+                                    >
+                                       {link.label}
+                                    </span>
+                                 </Link>
+                              </li>
+                           );
+                        })}
+                     </ul>
+                  </nav>
+               )}
             </div>
          </header>
          {isLoadingLogout && (

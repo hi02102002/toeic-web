@@ -29,7 +29,7 @@ export function DataTablePagination<TData>({
    showSelect = true,
 }: DataTablePaginationProps<TData>) {
    return (
-      <div className="flex items-center justify-between px-2 md:flex-row flex-col gap-6">
+      <div className="flex flex-col items-center justify-between gap-6 px-2 md:flex-row">
          {showSelect && (
             <div className="flex items-center gap-2">
                <div className="flex-1 text-sm text-muted-foreground">
@@ -53,7 +53,7 @@ export function DataTablePagination<TData>({
             className={cn(
                'flex items-center sm:space-x-6 lg:space-x-8 sm:flex-row flex-col space-y-6 sm:space-y-0',
                {
-                  'ml-auto': !showSelect,
+                  'md:ml-auto': !showSelect,
                }
             )}
          >
@@ -83,7 +83,7 @@ export function DataTablePagination<TData>({
                   </SelectContent>
                </Select>
             </div>
-            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+            <div className="flex min-w-[100px] items-center justify-center text-sm font-medium flex-shrink-0">
                Page {table.getState().pagination.pageIndex + 1} of{' '}
                {table.getPageCount()}
             </div>

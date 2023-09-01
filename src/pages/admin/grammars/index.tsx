@@ -235,7 +235,7 @@ const Grammars: NextPageWithLayout = () => {
 
    return (
       <div className="py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Grammars</h3>
+         <h3 className="text-xl font-semibold">Grammars</h3>
          <div className="flex items-center justify-between">
             <div className="flex items-center w-full gap-4">
                <Input

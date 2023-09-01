@@ -31,6 +31,7 @@ export const ROUTES = {
    SETTINGS_PAYMENT: '/settings/payment',
    SETTINGS_PASSWORD: '/settings/change-password',
    SETTINGS_LEARNING: '/settings/learning',
+   RESULT_TEST: '/result-test',
 };
 
 export const ROUTES_AUTH = [

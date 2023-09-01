@@ -19,14 +19,14 @@ export const TopicCard = ({ topic }: Props) => {
             <span className="text-lg font-semibold line-clamp-1">
                {topic.name}
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
                <IconBoxMultiple className="w-4 h-4" />
                <span>
                   {topic._count.topics}{' '}
                   {topic._count.topics > 1 ? 'Sub topics' : 'Sub topic'}
                </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
                <IconBoxMultiple className="w-4 h-4" />
                <span>
                   {topic._count.words}{' '}

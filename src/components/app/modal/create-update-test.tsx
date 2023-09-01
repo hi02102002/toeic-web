@@ -7,14 +7,17 @@ import {
    DialogHeader,
    DialogTitle,
    DialogTrigger,
+   Form,
+   FormControl,
+   FormField,
+   FormItem,
+   FormLabel,
+   FormMessage,
    Input,
-   InputLabel,
-   InputMessage,
-   InputWrapper,
 } from '@/components/shared';
 import { useDisclosure } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 
@@ -48,17 +51,19 @@ export const CreateUpdateTest = ({
    testName,
    ...props
 }: Props) => {
-   const {
-      register,
-      handleSubmit,
-      formState: { errors },
-      reset,
-   } = useForm<FormValues>({
+   const form = useForm<FormValues>({
       resolver: zodResolver(schema),
       defaultValues: defaultValues || {
          name: '',
       },
    });
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      reset,
+      control,
+   } = form;
 
    const [openMenu, { onClose, onOpen }] = useDisclosure(props.open || false, {
       close: () => {
@@ -69,6 +74,8 @@ export const CreateUpdateTest = ({
          props.onOpen?.();
       },
    });
+
+   const [typeAudio, setTypeAudio] = useState<'file' | 'url'>('file');
 
    const { ref: audioRef, ...audioProps } = register('audio');
    const audioInputRef = useRef<HTMLInputElement | null>(null);
@@ -109,58 +116,110 @@ export const CreateUpdateTest = ({
                   )}
                </DialogDescription>
             </DialogHeader>
-            <InputWrapper>
-               <InputLabel required>Test name</InputLabel>
-               <Input
-                  placeholder="Test name"
-                  {...register('name')}
-                  error={!!errors.name?.message}
-               />
-               {errors.name && (
-                  <InputMessage className="text-red-500">
-                     {errors.name.message}
-                  </InputMessage>
-               )}
-            </InputWrapper>
-            <InputWrapper>
-               <InputLabel required>Audio</InputLabel>
-               <Input
-                  type="file"
-                  {...audioProps}
-                  ref={(e) => {
-                     audioRef(e);
-                     audioInputRef.current = e;
-                  }}
-               />
-               {errors.audio && (
-                  <InputMessage className="text-red-500">
-                     {errors.audio?.message as string}
-                  </InputMessage>
-               )}
-            </InputWrapper>
-            <DialogFooter>
-               <Button variants="secondary" onClick={onClose}>
-                  Close
-               </Button>
-               <Button
-                  variants="primary"
-                  onClick={
-                     onSubmit
-                        ? handleSubmit((data) =>
-                             onSubmit(
-                                data,
-                                () => {
-                                   reset({ name: '' });
-                                },
-                                onClose
-                             )
-                          )
-                        : undefined
-                  }
+            <Form {...form}>
+               <form
+                  className="space-y-4"
+                  onSubmit={handleSubmit((values) => {
+                     onSubmit(
+                        values,
+                        () => {
+                           reset({ name: '' });
+                        },
+                        onClose
+                     );
+                  })}
                >
-                  {type === 'create' ? 'Create' : 'Update'}
-               </Button>
-            </DialogFooter>
+                  <FormField
+                     name="name"
+                     control={control}
+                     render={({ field, fieldState }) => {
+                        return (
+                           <FormItem>
+                              <FormLabel required>Test name</FormLabel>
+                              <FormControl>
+                                 <Input
+                                    placeholder="Test name"
+                                    {...field}
+                                    error={fieldState.error?.message}
+                                 />
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        );
+                     }}
+                  />
+
+                  <FormField
+                     name="audio"
+                     control={control}
+                     render={({ field, fieldState }) => {
+                        return (
+                           <FormItem>
+                              <FormLabel required>Audio</FormLabel>
+                              <FormControl>
+                                 <>
+                                    {typeAudio === 'file' && (
+                                       <Input
+                                          type="file"
+                                          {...audioProps}
+                                          ref={(e) => {
+                                             audioRef(e);
+                                             audioInputRef.current = e;
+                                          }}
+                                          error={!!errors.name?.message}
+                                          placeholder="Audio file"
+                                       />
+                                    )}
+                                    {typeAudio === 'url' && (
+                                       <Input
+                                          placeholder="Audio link"
+                                          {...field}
+                                          error={fieldState.error?.message}
+                                       />
+                                    )}
+                                 </>
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        );
+                     }}
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <Button
+                        variants="primary"
+                        className="w-full"
+                        onClick={() => {
+                           setTypeAudio('file');
+                           if (type === 'create') {
+                              reset({ audio: '' });
+                           }
+                        }}
+                     >
+                        Using file
+                     </Button>
+                     <Button
+                        variants="primary"
+                        className="w-full"
+                        onClick={() => {
+                           setTypeAudio('url');
+                           if (type === 'create') {
+                              reset({ audio: '' });
+                           }
+                        }}
+                     >
+                        Using link{' '}
+                     </Button>
+                  </div>
+                  <DialogFooter>
+                     <Button variants="secondary" onClick={onClose}>
+                        Close
+                     </Button>
+                     <Button variants="primary" type="submit">
+                        {type === 'create' ? 'Create' : 'Update'}
+                     </Button>
+                  </DialogFooter>
+               </form>
+            </Form>
          </DialogContent>
       </Dialog>
    );

@@ -5,6 +5,7 @@ import {
    CreateUpdateQuestionPart2,
    CreateUpdateQuestionPart34,
    CreateUpdateQuestionPart67,
+   ImportJson,
 } from '@/components/app';
 import { AdminLayout } from '@/components/layouts/admin';
 import {
@@ -21,6 +22,7 @@ import { DataTable } from '@/components/shared/table';
 import { ROUTES } from '@/constants';
 import {
    useCreateQuestion,
+   useImportQuestionsTest,
    usePart,
    useQuestions,
    useRemoveQuestions,
@@ -94,6 +96,17 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
       isLoading: isLoadingRemoveQuestions,
    } = useRemoveQuestions(q);
 
+   const {
+      mutateAsync: handleImportQuestions,
+      isLoading: isLoadingImportQuestions,
+   } = useImportQuestionsTest(q);
+
+   const isLoadingActions =
+      isLoadingCreateQuestion ||
+      isLoadingUpdateQuestion ||
+      isLoadingRemoveQuestions ||
+      isLoadingImportQuestions;
+
    const renderCreate = useCallback(() => {
       switch (part?.type) {
          case PartType.PART1:
@@ -150,14 +163,13 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
          case PartType.PART5:
             return (
                <CreateUpdateCommonQuestion
-                  onSubmit={async ({ values, resetForm, close }) => {
+                  onSubmit={async ({ values, close }) => {
                      await handleCreateQuestion({
                         ...values,
                         partType: part.type,
                         partId: part?.id as string,
                         testId: part.testId,
                      });
-                     resetForm?.();
                      close?.();
                   }}
                >
@@ -351,7 +363,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
             case PartType.PART5:
                return (
                   <CreateUpdateCommonQuestion
-                     onSubmit={async ({ values, resetForm, close }) => {
+                     onSubmit={async ({ values, close }) => {
                         await handleUpdateQuestion({
                            data: {
                               partType: part.type as PartType,
@@ -366,7 +378,6 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                            },
                            id: row.original.id,
                         });
-                        resetForm?.();
                         close?.();
                      }}
                      type="update"
@@ -543,10 +554,26 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
       <>
          <div className="py-4 space-y-4">
             <div className="flex items-center justify-between">
-               <h3 className="text-lg font-semibold">
+               <h3 className="text-xl font-semibold">
                   {part?.test.name} - {part?.name}
                </h3>
-               {renderCreate()}
+               <div className="flex items-center gap-4">
+                  {renderCreate()}
+                  <ImportJson
+                     onConfirm={async ({ json, close }) => {
+                        await handleImportQuestions({
+                           json,
+                           partId: part?.id as string,
+                           testId: part?.test.id as string,
+                           partType: part?.type as PartType,
+                        });
+
+                        close?.();
+                     }}
+                  >
+                     <Button variants="primary">Import (JSON)</Button>
+                  </ImportJson>
+               </div>
             </div>
             <DataTable
                table={table}
@@ -557,9 +584,7 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                }}
             />
          </div>
-         {(isLoadingCreateQuestion ||
-            isLoadingUpdateQuestion ||
-            isLoadingRemoveQuestions) && (
+         {isLoadingActions && (
             <LoadingFullPage
                className="backdrop-blur-sm z-[10000] fixed inset-0 bg-transparent"
                classNameLoading="text-primary"

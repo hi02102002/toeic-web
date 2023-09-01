@@ -10,6 +10,7 @@ import {
    TBaseResponse,
    TDeck,
    TFlashcardWithAnswers,
+   TUserLearningSetting,
 } from '@/types';
 import { withRoute } from '@/utils/withRoute';
 import Image from 'next/image';
@@ -17,32 +18,37 @@ import Image from 'next/image';
 type Props = {
    deck: TDeck;
    flashcards: TFlashcardWithAnswers[];
+   setting: TUserLearningSetting;
 };
 
 const WithLearningProvider: NextPageWithLayout<Props> = ({
    flashcards,
    deck,
+   setting,
 }) => {
    return (
       <div>
          <LearningFlashcardProvider initFlashcards={flashcards}>
-            <Learning flashcards={flashcards} deck={deck} />
+            <Learning flashcards={flashcards} deck={deck} setting={setting} />
          </LearningFlashcardProvider>
       </div>
    );
 };
 
-const Learning = ({ deck }: Props) => {
+const Learning = ({ deck, setting }: Props) => {
    const { currentFlashcard, flashcards } = useLearningFlashcardCtx();
 
    return (
       <div className="container py-4 space-y-4">
-         <h3 className="text-lg font-semibold">
+         <h3 className="text-xl font-semibold">
             Learning flashcard of {deck.name}
          </h3>
          <div>
             {currentFlashcard ? (
-               <Flashcard flashcard={currentFlashcard} />
+               <Flashcard
+                  flashcard={currentFlashcard}
+                  autoPlayAudio={setting.autoPlayAudio}
+               />
             ) : (
                <div className="flex flex-col items-center justify-center space-y-4 p-9">
                   <div className="w-28">
@@ -55,7 +61,7 @@ const Learning = ({ deck }: Props) => {
                         />
                      </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-center">
+                  <h3 className="text-xl font-semibold text-center">
                      Congratulations! You finished learning flashcards today!
                   </h3>
                </div>
@@ -105,10 +111,23 @@ export const getServerSideProps = withRoute({
       return res.data;
    };
 
+   const getUserLearningSetting = async () => {
+      const res: TBaseResponse<TUserLearningSetting> = await http_server(
+         {
+            accessToken: access_token as string,
+            refreshToken: refresh_token as string,
+         },
+         `/settings`
+      );
+
+      return res.data;
+   };
+
    try {
-      const [deck, flashcards] = await Promise.all([
+      const [deck, flashcards, setting] = await Promise.all([
          getDeck(),
          getLearningFlashcards(),
+         getUserLearningSetting(),
       ]);
 
       if (!deck) {
@@ -121,6 +140,7 @@ export const getServerSideProps = withRoute({
          props: {
             deck,
             flashcards,
+            setting,
          },
       };
    } catch (error) {

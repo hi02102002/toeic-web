@@ -1,4 +1,4 @@
-import { ToiecTestCard } from '@/components/app';
+import { ToiecTestCard } from '@/components/app/toiec-test';
 import { AppLayout } from '@/components/layouts/app';
 import { Pagination } from '@/components/shared';
 import { http_server } from '@/libs/axios';
@@ -16,7 +16,7 @@ const ToiecTests: NextPageWithLayout<Props> = ({ tests, total }) => {
 
    return (
       <div className="container py-4 space-y-4">
-         <h3 className="text-lg font-semibold">Toiec Tests</h3>
+         <h3 className="text-xl font-semibold">Toiec Tests</h3>
          <div className="flex-1">
             {tests.length > 0 ? (
                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">

@@ -183,7 +183,7 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
       <>
          <div className="py-4 space-y-4">
             <div className="flex items-center justify-between">
-               <h3 className="text-lg font-semibold">
+               <h3 className="text-xl font-semibold">
                   Questions of {grammar?.name}
                </h3>
                <CreateUpdateCommonQuestion

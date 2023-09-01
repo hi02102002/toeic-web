@@ -26,9 +26,9 @@ const Header = () => {
    return (
       <header
          className={cn(
-            'h-header flex items-center fixed top-0 left-0 right-0 border-b border-transparent transition-all',
+            'h-header flex items-center fixed top-0 left-0 right-0 border-b border-transparent transition-all z-50',
             {
-               'backdrop-blur-sm border-b border-border': scrollY > 300,
+               'bg-white border-b border-border': scrollY > 300,
             }
          )}
       >

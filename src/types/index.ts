@@ -409,3 +409,16 @@ export type TPasswordChangeDto = {
    newPassword: string;
    confirmPassword: string;
 };
+
+export type TQuestionJson = {
+   image: string;
+   audio: string;
+   text: string;
+   explain: string;
+   transcript: string;
+   answers: {
+      content: string;
+      isCorrect: boolean;
+   }[];
+   questions: Array<TQuestionJson>;
+};

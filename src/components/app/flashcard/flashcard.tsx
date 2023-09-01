@@ -12,6 +12,7 @@ type Props = {
    flashcard: TFlashcardWithAnswers;
    withButton?: boolean;
    withAnswer?: boolean;
+   autoPlayAudio?: boolean;
 };
 
 const LIST_BUTTONS: Array<{
@@ -49,9 +50,18 @@ const Badge = ({ isReview }: { isReview: boolean }) => {
    );
 };
 
-const Front = ({ flashcard, withButton }: Props) => {
+const Front = ({ flashcard, withButton, autoPlayAudio }: Props) => {
    const [isPlaying, { onOpen: handlePlay, onClose: handlePause }] =
-      useDisclosure();
+      useDisclosure(autoPlayAudio);
+
+   console.log('autoPlayAudio', autoPlayAudio);
+
+   useEffect(() => {
+      if (autoPlayAudio) {
+         handlePlay();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [autoPlayAudio, flashcard]);
 
    return (
       <div className="absolute inset-0 flex flex-col items-center justify-center h-full p-4 backface-hidden ">
@@ -161,6 +171,7 @@ export const Flashcard = ({
    flashcard,
    withButton = true,
    withAnswer,
+   autoPlayAudio,
 }: Props) => {
    const [
       isFlipped,
@@ -222,7 +233,11 @@ export const Flashcard = ({
                }}
                onClick={flashcard.n === 0 ? onToggleFlipped : undefined}
             >
-               <Front flashcard={flashcard} withButton={withButton} />
+               <Front
+                  flashcard={flashcard}
+                  withButton={withButton}
+                  autoPlayAudio={autoPlayAudio}
+               />
                <Back flashcard={flashcard} withButton={withButton} />
             </div>
          </div>
@@ -248,7 +263,7 @@ export const Flashcard = ({
          {flashcard.n > 0 &&
             flashcard.answers &&
             flashcard.answers.length > 0 && (
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {flashcard.answers.map((answer) => {
                      return (
                         <div

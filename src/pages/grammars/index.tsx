@@ -1,5 +1,6 @@
 import { GrammarCard } from '@/components/app/grammars';
 import { AppLayout } from '@/components/layouts/app';
+import { Pagination } from '@/components/shared';
 import { http_server } from '@/libs/axios';
 import { NextPageWithLayout, TBaseResponse, TGrammar } from '@/types';
 import { withRoute } from '@/utils/withRoute';
@@ -14,12 +15,24 @@ const Grammars: NextPageWithLayout<Props> = ({ grammars, total }) => {
 
    return (
       <div className="container py-4 space-y-4">
-         <h3 className="text-lg font-semibold ">Grammars</h3>
-         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-            {grammars.map((grammar) => (
-               <GrammarCard key={grammar.id} grammar={grammar} />
-            ))}
-         </div>
+         <h3 className="text-xl font-semibold ">Grammars</h3>
+         {grammars.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+               {grammars.map((grammar) => (
+                  <GrammarCard key={grammar.id} grammar={grammar} />
+               ))}
+            </div>
+         ) : (
+            <p className="text-center font-medium">
+               There is no grammar to learn.
+            </p>
+         )}
+         <Pagination
+            total={total}
+            onPaginationChange={(page) => {
+               console.log(page);
+            }}
+         />
       </div>
    );
 };

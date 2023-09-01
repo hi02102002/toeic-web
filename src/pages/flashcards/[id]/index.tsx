@@ -89,7 +89,7 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
       <>
          <div className="container py-4 space-y-4">
             <div className="flex items-center justify-between gap-4">
-               <h3 className="text-lg font-semibold">
+               <h3 className="text-xl font-semibold">
                   Flashcards of {deck.name}
                </h3>
                <DropdownMenu>
@@ -99,17 +99,20 @@ const Flashcards: NextPageWithLayout<Props> = ({ deck: initDeck }) => {
                   <DropdownMenuContent>
                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
                      <DropdownMenuSeparator />
-                     <DropdownMenuItem
-                        className="flex items-center gap-2"
-                        onClick={() => {
-                           router.push(
-                              `${ROUTES.FLASHCARDS}/${deck.id}/learning`
-                           );
-                        }}
-                     >
-                        <IconNotebook className="w-5 h-5" />
-                        Start learning
-                     </DropdownMenuItem>
+                     {resFlashcards?.flashcards &&
+                        resFlashcards.flashcards.length > 0 && (
+                           <DropdownMenuItem
+                              className="flex items-center gap-2"
+                              onClick={() => {
+                                 router.push(
+                                    `${ROUTES.FLASHCARDS}/${deck.id}/learning`
+                                 );
+                              }}
+                           >
+                              <IconNotebook className="w-5 h-5" />
+                              Start learning
+                           </DropdownMenuItem>
+                        )}
                      <CreateUpdateWordFlashcard
                         title="Add new flashcard"
                         type="create"

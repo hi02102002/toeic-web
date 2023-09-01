@@ -76,6 +76,20 @@ class TestsService {
    getResult(id: string): Promise<TBaseResponse<TTestUser>> {
       return http.get(`/tests/results/${id}`);
    }
+
+   getAllResults(q?: { page?: number; limit?: number }): Promise<
+      TBaseResponse<{
+         total: number;
+         results: Array<TTestUser>;
+      }>
+   > {
+      return http.get('/tests/results', {
+         params: {
+            page: Number(q?.page || 1),
+            limit: Number(q?.limit || 5),
+         },
+      });
+   }
 }
 
 export const testsService = new TestsService();

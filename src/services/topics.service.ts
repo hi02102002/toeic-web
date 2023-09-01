@@ -60,6 +60,13 @@ class TopicsService {
    removeWords(ids: string[]): Promise<TBaseResponse<null>> {
       return http.delete('/topics/words', { data: { ids } });
    }
+
+   importWords(data: {
+      topicId: string;
+      words: TWordDto[];
+   }): Promise<TBaseResponse<null>> {
+      return http.post('/topics/words/import', data);
+   }
 }
 
 export const topicsService = new TopicsService();

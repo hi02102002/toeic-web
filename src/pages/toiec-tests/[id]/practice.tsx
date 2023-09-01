@@ -25,25 +25,23 @@ const Practice = ({ test }: Props) => {
    const { setUser } = useUser();
 
    useEffect(() => {
-      usersService.startTest().then((v) => {
+      usersService.startTest();
+      setUser((prev) => {
+         if (!prev) return prev;
+         return {
+            ...prev,
+            isTesting: true,
+         };
+      });
+      return () => {
          setUser((prev) => {
             if (!prev) return prev;
             return {
                ...prev,
-               isTesting: true,
+               isTesting: false,
             };
          });
-      });
-      return () => {
-         usersService.finishTest().then(() => {
-            setUser((prev) => {
-               if (!prev) return prev;
-               return {
-                  ...prev,
-                  isTesting: false,
-               };
-            });
-         });
+         usersService.finishTest();
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);

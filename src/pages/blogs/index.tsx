@@ -12,7 +12,8 @@ const Blogs: NextPageWithLayout<Props> = ({ posts }) => {
    console.log(posts);
    return (
       <div className="pt-header">
-         <div className="container py-4">
+         <div className="container py-4 space-y-4">
+            <h3 className="text-xl font-semibold">Blogs</h3>
             <ul className="grid grid-cols-4 gap-4">
                {posts.map((post) => {
                   return <Post key={post._id} post={post} />;

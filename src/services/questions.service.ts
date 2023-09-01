@@ -1,9 +1,11 @@
 import { http } from '@/libs/axios';
 import {
+   PartType,
    TAnswer,
    TBaseResponse,
    TQuestion,
    TQuestionDto,
+   TQuestionJson,
    TQuestionQuery,
 } from '@/types';
 
@@ -35,6 +37,15 @@ class QuestionService {
 
    removeQuestions(ids: string[]): Promise<TBaseResponse<TQuestion[]>> {
       return http.delete('/questions', { data: { ids } });
+   }
+
+   importQuestions(data: {
+      partId: string;
+      questions: TQuestionJson[];
+      partType: PartType;
+      testId: string;
+   }): Promise<TBaseResponse<TQuestion[]>> {
+      return http.post('/questions/import', data);
    }
 }
 
