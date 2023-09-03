@@ -33,6 +33,8 @@ export * from './use-remove-grammars';
 export * from './use-remove-questions';
 export * from './use-remove-topics';
 export * from './use-remove-words';
+export * from './use-request-reset-password';
+export * from './use-reset-password';
 export * from './use-results-test';
 export * from './use-submit-test';
 export * from './use-tests';

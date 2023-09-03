@@ -243,8 +243,8 @@ const Tests: NextPageWithLayout = () => {
          <div className="py-4 space-y-4">
             <h3 className="text-xl font-semibold">Tests Management</h3>
             <div className="space-y-4">
-               <div className="flex items-center justify-between w-full md:flex-row flex-col gap-4">
-                  <div className="flex items-center gap-4 w-full md:flex-row flex-col">
+               <div className="flex flex-col items-center justify-between w-full gap-4 md:flex-row">
+                  <div className="flex flex-col items-center w-full gap-4 md:flex-row">
                      <Input
                         className="w-full"
                         placeholder="Search"
@@ -305,7 +305,14 @@ const Tests: NextPageWithLayout = () => {
 };
 
 Tests.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title="Admin | Tests"
+         description="Manage tests, create, update, remove tests"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 export const getServerSideProps = withRoute({
    isProtected: true,

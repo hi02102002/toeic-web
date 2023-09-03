@@ -4,17 +4,24 @@ import { DataTable } from '@/components/shared/table';
 import { ROUTES } from '@/constants';
 import { useResultsTest } from '@/hooks';
 import { NextPageWithLayout, TTestUser } from '@/types';
+import { calcPageCount } from '@/utils';
 import { withRoute } from '@/utils/withRoute';
 import {
    ColumnDef,
+   PaginationState,
    getCoreRowModel,
    useReactTable,
 } from '@tanstack/react-table';
+import { useState } from 'react';
 
 type Props = {};
 
 const ResultTest: NextPageWithLayout<Props> = (props) => {
    const { data, isLoading } = useResultsTest();
+   const [pagination, setPagination] = useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 5,
+   });
 
    const columns: ColumnDef<TTestUser>[] = [
       {
@@ -64,6 +71,12 @@ const ResultTest: NextPageWithLayout<Props> = (props) => {
       columns,
       data: data?.results || [],
       getCoreRowModel: getCoreRowModel(),
+      state: {
+         pagination,
+      },
+      onPaginationChange: setPagination,
+      manualPagination: true,
+      pageCount: calcPageCount(data?.total || 0, pagination.pageSize),
    });
 
    return (

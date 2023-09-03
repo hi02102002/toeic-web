@@ -209,26 +209,25 @@ const Topics: NextPageWithLayout = () => {
    return (
       <div className="py-4 space-y-4">
          <h3 className="text-xl font-semibold">Topics</h3>
-         <div className="flex items-center justify-between">
-            <div className="flex items-center justify-between">
-               <div className="flex items-center gap-4">
-                  <Input
-                     className="w-full"
-                     placeholder="Search"
-                     value={search}
-                     onChange={(e: any) => setSearch(e.target.value)}
-                     classNameContainer="max-w-xs"
-                  />
-                  {search && (
-                     <Button
-                        leftIcon={<IconX />}
-                        variants="outline"
-                        onClick={() => setSearch('')}
-                     >
-                        Reset
-                     </Button>
-                  )}
-               </div>
+         <div className="flex items-center justify-between w-full gap-4 md:flex-row flex-col">
+            <div className="flex items-center gap-4 w-full md:flex-row flex-col">
+               <Input
+                  className="w-full"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e: any) => setSearch(e.target.value)}
+                  classNameContainer="w-full md:max-w-xs"
+               />
+               {search && (
+                  <Button
+                     leftIcon={<IconX />}
+                     variants="outline"
+                     onClick={() => setSearch('')}
+                     className=" md:w-auto w-full"
+                  >
+                     Reset
+                  </Button>
+               )}
             </div>
             <CreateUpdateTopic
                onSubmit={async ({ name, hasChildren }, onClose) => {
@@ -240,7 +239,12 @@ const Topics: NextPageWithLayout = () => {
                   onClose?.();
                }}
             >
-               <Button variants="primary">Add new topic</Button>
+               <Button
+                  variants="primary"
+                  className="flex-shrink-0 md:w-auto w-full"
+               >
+                  Add new topic
+               </Button>
             </CreateUpdateTopic>
          </div>
          <DataTable

@@ -123,7 +123,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                      close?.();
                   }}
                >
-                  <Button variants="primary">Create question</Button>
+                  <Button variants="primary" className="w-full sm:w-auto">
+                     Create question
+                  </Button>
                </CreateUpdateQuestionPart1>
             );
          case PartType.PART2:
@@ -139,7 +141,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                      close?.();
                   }}
                >
-                  <Button variants="primary">Create question</Button>
+                  <Button variants="primary" className="w-full sm:w-auto">
+                     Create question
+                  </Button>
                </CreateUpdateQuestionPart2>
             );
          case PartType.PART3:
@@ -157,7 +161,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                      close?.();
                   }}
                >
-                  <Button variants="primary">Create question</Button>
+                  <Button variants="primary" className="w-full sm:w-auto">
+                     Create question
+                  </Button>
                </CreateUpdateQuestionPart34>
             );
          case PartType.PART5:
@@ -173,7 +179,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                      close?.();
                   }}
                >
-                  <Button variants="primary">Create question</Button>
+                  <Button variants="primary" className="w-full sm:w-auto">
+                     Create question
+                  </Button>
                </CreateUpdateCommonQuestion>
             );
          case PartType.PART6:
@@ -191,7 +199,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                      close?.();
                   }}
                >
-                  <Button variants="primary">Create question</Button>
+                  <Button variants="primary" className="w-full sm:w-auto">
+                     Create question
+                  </Button>
                </CreateUpdateQuestionPart67>
             );
          default:
@@ -553,11 +563,11 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
    return (
       <>
          <div className="py-4 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col justify-between gap-4 sm:items-center sm:flex-row">
                <h3 className="text-xl font-semibold">
                   {part?.test.name} - {part?.name}
                </h3>
-               <div className="flex items-center gap-4">
+               <div className="flex flex-col items-center gap-4 sm:flex-row">
                   {renderCreate()}
                   <ImportJson
                      onConfirm={async ({ json, close }) => {
@@ -571,7 +581,9 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
                         close?.();
                      }}
                   >
-                     <Button variants="primary">Import (JSON)</Button>
+                     <Button variants="primary" className="w-full sm:w-auto">
+                        Import (JSON)
+                     </Button>
                   </ImportJson>
                </div>
             </div>
@@ -595,7 +607,14 @@ const Part: NextPageWithLayout<Props> = ({ part: initPart }) => {
 };
 
 Part.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title={`Admin | ${page.props.part?.test.name} - ${page.props.part?.name}`}
+         description="Manage questions, create, update, remove"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({

@@ -20,7 +20,7 @@ const Dashboard: NextPageWithLayout<Props> = ({ recentDecks, recentTests }) => {
             <h3 className="text-xl font-semibold">
                Your flashcards progress 7 days
             </h3>
-            <div className="max-w-4xl mx-auto">
+            <div className="sm:max-w-4xl mx-auto">
                <FlashcardChart />
             </div>
          </div>

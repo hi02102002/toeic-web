@@ -293,26 +293,27 @@ const Words: NextPageWithLayout = (props: Props) => {
       <div className="py-4 space-y-4">
          <h3 className="text-xl font-semibold">Words</h3>
          <div className="space-y-4">
-            <div className="flex items-center justify-between w-full">
-               <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between w-full md:flex-row flex-col gap-4">
+               <div className="flex items-center gap-4 w-full md:flex-row flex-col">
                   <Input
                      className="w-full"
                      placeholder="Search"
                      value={search}
                      onChange={(e: any) => setSearch(e.target.value)}
-                     classNameContainer="max-w-xs"
+                     classNameContainer="md:max-w-xs w-full"
                   />
                   {search && (
                      <Button
                         leftIcon={<IconX />}
                         variants="outline"
                         onClick={() => setSearch('')}
+                        className="md:w-auto w-full"
                      >
                         Reset
                      </Button>
                   )}
                </div>
-               <div className="flex items-center gap-4">
+               <div className="flex items-center gap-4 flex-shrink-0 md:flex-row flex-col w-full md:w-auto">
                   <CreateUpdateWordFlashcard
                      title="Add new word"
                      onSubmit={async ({ values, close }) => {
@@ -320,7 +321,12 @@ const Words: NextPageWithLayout = (props: Props) => {
                         close?.();
                      }}
                   >
-                     <Button variants="primary">Add new word</Button>
+                     <Button
+                        variants="primary"
+                        className="md:w-auto w-full flex-shrink-0"
+                     >
+                        Add new word
+                     </Button>
                   </CreateUpdateWordFlashcard>
                   <ImportJson
                      onConfirm={async ({ json, close }) => {
@@ -332,7 +338,12 @@ const Words: NextPageWithLayout = (props: Props) => {
                         close?.();
                      }}
                   >
-                     <Button variants="primary">Import (JSON)</Button>
+                     <Button
+                        variants="primary"
+                        className="md:w-auto w-full flex-shrink-0"
+                     >
+                        Import (JSON)
+                     </Button>
                   </ImportJson>
                </div>
             </div>

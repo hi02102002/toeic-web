@@ -146,9 +146,7 @@ export const CreateUpdateQuestionPart1 = ({
             else onClose();
          }}
       >
-         <DialogTrigger asChild>
-            <div>{children}</div>
-         </DialogTrigger>
+         <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent className="my-4">
             <Form {...form}>
                <form

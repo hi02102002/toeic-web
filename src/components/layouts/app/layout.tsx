@@ -30,8 +30,8 @@ const NAV_LINKS: Array<TNavLink> = [
 ];
 type Props = {
    children: React.ReactNode;
-   title: string;
-   description: string;
+   title?: string;
+   description?: string;
 };
 
 export const AppLayout = ({ children, description, title }: Props) => {

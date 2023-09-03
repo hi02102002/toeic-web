@@ -225,7 +225,14 @@ const Grammar: NextPageWithLayout<Props> = ({ grammar: initGrammar }) => {
 };
 
 Grammar.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title={`Admin | Grammar: ${page.props.grammar?.name}`}
+         description="Manage grammar questions, create, update, remove"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({

@@ -112,9 +112,7 @@ export const CreateUpdateCommonQuestion = ({
             else onClose();
          }}
       >
-         <DialogTrigger asChild>
-            <div>{children}</div>
-         </DialogTrigger>
+         <DialogTrigger asChild>{children}</DialogTrigger>
          <DialogContent className="my-4">
             <DialogHeader>
                <DialogTitle>

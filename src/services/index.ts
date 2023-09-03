@@ -1,3 +1,4 @@
+export * from './auth.service';
 export * from './decks.service';
 export * from './flashcards.service';
 export * from './grammars.service';

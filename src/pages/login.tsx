@@ -8,7 +8,7 @@ import {
 } from '@/components/shared';
 import { ROUTES } from '@/constants';
 import { auth } from '@/libs/firebase';
-import { TBaseResponse, TUser } from '@/types';
+import { authService } from '@/services';
 import { withRoute } from '@/utils/withRoute';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -17,7 +17,6 @@ import {
    IconBrandTether,
    IconChevronLeft,
 } from '@tabler/icons-react';
-import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import {
    AuthProvider,
@@ -62,16 +61,7 @@ const Login = () => {
 
          setIsLoading(true);
 
-         const {
-            message,
-         }: TBaseResponse<{
-            accessToken: string;
-            refreshToken: string;
-         }> = await axios
-            .post('/api/login', values, {
-               withCredentials: true,
-            })
-            .then((r) => r.data);
+         const { message } = await authService.login(values);
          toast.success(message);
          setIsLoading(false);
          router.push((prevPath as string) || ROUTES.DASHBOARD);
@@ -90,23 +80,12 @@ const Login = () => {
 
          const res = await signInWithPopup(auth, authProvider);
 
-         const dto: Pick<TUser, 'avatar' | 'email' | 'name' | 'provider'> = {
+         const { message } = await authService.loginSocial({
             avatar: res.user?.photoURL || '',
             email: res.user?.email,
             name: res.user?.displayName || '',
             provider: res?.providerId || 'local',
-         };
-
-         const {
-            message,
-         }: TBaseResponse<{
-            accessToken: string;
-            refreshToken: string;
-         }> = await axios
-            .post('/api/login-social', dto, {
-               withCredentials: true,
-            })
-            .then((r) => r.data);
+         });
          toast.success(message);
          setIsLoading(false);
          router.push(ROUTES.HOME);

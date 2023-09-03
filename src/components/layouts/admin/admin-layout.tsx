@@ -1,9 +1,12 @@
 import { Header } from '@/components/shared';
 import { ROUTES } from '@/constants';
 import { TNavLink } from '@/types';
+import { NextSeo } from 'next-seo';
 
 type Props = {
    children: React.ReactNode;
+   title?: string;
+   description?: string;
 };
 
 const NAV_LINKS: Array<TNavLink> = [
@@ -29,9 +32,14 @@ const NAV_LINKS: Array<TNavLink> = [
    },
 ];
 
-export const AdminLayout = ({ children }: Props) => {
+export const AdminLayout = ({
+   children,
+   description = 'Admin toiec',
+   title = 'Admin',
+}: Props) => {
    return (
       <div>
+         <NextSeo title={title} description={description} />
          <Header navLinks={NAV_LINKS} />
          <div className="container">{children}</div>
       </div>

@@ -22,10 +22,14 @@ import {
 } from '@/components/shared';
 import { useUser } from '@/contexts/user.ctx';
 import { useChangePassword, useDeleteAccount, useUpdateProfile } from '@/hooks';
+import { useUploadFile } from '@/hooks/use-upload-file';
 import { NextPageWithLayout, Provider, Role } from '@/types';
 import { withRoute } from '@/utils/withRoute';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconCamera } from '@tabler/icons-react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import * as zod from 'zod';
 
 type Props = {};
@@ -63,7 +67,8 @@ type FormEmail = zod.infer<typeof schemaEmail>;
 type FormPassword = zod.infer<typeof schemaPassword>;
 
 const Account: NextPageWithLayout<Props> = (props: Props) => {
-   const { user } = useUser();
+   const { user, setUser } = useUser();
+   const inputAvatarRef = useRef<HTMLInputElement | null>(null);
    const formName = useForm<FormName>({
       resolver: zodResolver(schemaName),
       defaultValues: {
@@ -98,6 +103,8 @@ const Account: NextPageWithLayout<Props> = (props: Props) => {
       mutateAsync: handleDeleteAccount,
       isLoading: isLoadingDeleteAccount,
    } = useDeleteAccount();
+   const { mutateAsync: handleUploadAvatar, isLoading: isLoadingUploadAvatar } =
+      useUploadFile();
 
    const handleUpdateName = (data: FormName) => {
       _handleUpdateName({
@@ -119,6 +126,32 @@ const Account: NextPageWithLayout<Props> = (props: Props) => {
          newPassword: '',
          confirmPassword: '',
       });
+   };
+
+   const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+         handleUploadAvatar(file, {
+            onSuccess(data, variables, context) {
+               const url = data.url;
+               if (url) {
+                  setUser((prev) => {
+                     if (prev) {
+                        return {
+                           ...prev,
+                           avatar: url,
+                        };
+                     }
+                     return prev;
+                  });
+               }
+               toast.success('Upload avatar successfully');
+            },
+            onError() {
+               toast.error('Upload avatar failed');
+            },
+         });
+      }
    };
 
    return (
@@ -231,16 +264,31 @@ const Account: NextPageWithLayout<Props> = (props: Props) => {
 
          <SectionSetting>
             <SectionSettingBody>
-               <div className="flex justify-between gap-4 md:flex-row flex-col ">
+               <div className="flex flex-col justify-between gap-4 md:flex-row ">
                   <div className="space-y-2">
                      <SectionSettingTitle title="Your Avatar" />
                      <SectionSettingDescription description="Click on the avatar to upload a custom one from your files." />
                   </div>
-                  <Avatar
-                     url={user?.avatar}
-                     className="w-24 h-24"
-                     alt={user?.name}
-                  />
+                  <div
+                     className="relative w-24 h-24 overflow-hidden rounded-full cursor-pointer"
+                     onClick={() => inputAvatarRef.current?.click()}
+                  >
+                     <Avatar
+                        url={user?.avatar}
+                        className="w-24 h-24"
+                        alt={user?.name}
+                     />
+                     <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center w-full h-6 bg-black/50">
+                        <IconCamera className="w-4 h-4 text-white" />
+                     </div>
+                     <input
+                        type="file"
+                        className="hidden"
+                        ref={inputAvatarRef}
+                        accept="image/*"
+                        onChange={handleAvatarFileChange}
+                     />
+                  </div>
                </div>
             </SectionSettingBody>
             <SectionSettingBottom>
@@ -250,7 +298,7 @@ const Account: NextPageWithLayout<Props> = (props: Props) => {
          {user?.provider === Provider.LOCAL && (
             <SectionSetting>
                <SectionSettingBody>
-                  <div className="flex justify-between gap-4 md:flex-row flex-col ">
+                  <div className="flex flex-col justify-between gap-4 md:flex-row ">
                      <div className="space-y-2">
                         <SectionSettingTitle title="Change Password" />
                         <SectionSettingDescription
@@ -388,7 +436,7 @@ const Account: NextPageWithLayout<Props> = (props: Props) => {
                </SectionSettingBottom>
             </SectionSetting>
          )}
-         {isLoadingDeleteAccount && (
+         {(isLoadingDeleteAccount || isLoadingUploadAvatar) && (
             <LoadingFullPage
                className="backdrop-blur-sm z-[10000] fixed inset-0 bg-transparent"
                classNameLoading="text-primary"

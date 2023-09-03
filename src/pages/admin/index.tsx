@@ -71,7 +71,7 @@ const Admin: NextPageWithLayout<Props> = ({
       <div className="py-4 space-y-4">
          <div className="space-y-4">
             <h3 className="text-xl font-semibold">Quick links</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                {QUICK_LINKS.map((quickLink) => {
                   return <FeatureCard key={quickLink.title} {...quickLink} />;
                })}
@@ -83,7 +83,7 @@ const Admin: NextPageWithLayout<Props> = ({
                   Top 5 tests that use most
                </h3>
                <div>
-                  <Table className="border-border border rounded">
+                  <Table className="border rounded border-border">
                      <TableHeader className="rounded-t">
                         <TableRow>
                            <TableHead>Test name</TableHead>
@@ -120,7 +120,7 @@ const Admin: NextPageWithLayout<Props> = ({
                   Top 5 users highest score
                </h3>
                <div>
-                  <Table className="border-border border rounded">
+                  <Table className="border rounded border-border">
                      <TableHeader className="rounded-t">
                         <TableRow>
                            <TableHead>Test name</TableHead>
@@ -161,7 +161,14 @@ const Admin: NextPageWithLayout<Props> = ({
 };
 
 Admin.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title="Admin | Dashboard"
+         description="A dashboard for admin"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({

@@ -287,7 +287,14 @@ const Grammars: NextPageWithLayout = () => {
 };
 
 Grammars.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title="Admin | Grammars"
+         description="Manage grammar lessons, create, update, remove"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({

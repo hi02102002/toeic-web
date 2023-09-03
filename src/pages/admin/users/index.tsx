@@ -18,6 +18,7 @@ import {
    SelectValue,
 } from '@/components/shared';
 import { DataTable } from '@/components/shared/table';
+import { ROUTES } from '@/constants';
 import { useDebounce, useUsers } from '@/hooks';
 import { useUpdateUser } from '@/hooks/use-update-user';
 import { NextPageWithLayout, TUser, TUserQuery, UserStatus } from '@/types';
@@ -36,9 +37,11 @@ import {
    getCoreRowModel,
    useReactTable,
 } from '@tanstack/react-table';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 const Users: NextPageWithLayout = () => {
+   const router = useRouter();
    const [pagination, setPagination] = useState<PaginationState>({
       pageIndex: 0,
       pageSize: 5,
@@ -107,7 +110,13 @@ const Users: NextPageWithLayout = () => {
                   <DropdownMenuContent align="start">
                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
                      <DropdownMenuSeparator />
-                     <DropdownMenuItem>
+                     <DropdownMenuItem
+                        onClick={() => {
+                           router.push(
+                              `${ROUTES.ADMIN_USERS}/${row.original.id}`
+                           );
+                        }}
+                     >
                         <IconEye className="w-4 h-4 mr-2" />
                         View
                      </DropdownMenuItem>
@@ -164,8 +173,8 @@ const Users: NextPageWithLayout = () => {
    return (
       <div className="py-4 space-y-4">
          <h3 className="text-xl font-semibold">Users</h3>
-         <div className="flex items-center justify-between sm:flex-row flex-col gap-4">
-            <div className="flex items-center gap-4 w-full sm:flex-row flex-col ">
+         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <div className="flex flex-col items-center w-full gap-4 sm:flex-row ">
                <Input
                   placeholder="Search"
                   classNameContainer="sm:max-w-xs w-full"
@@ -177,7 +186,7 @@ const Users: NextPageWithLayout = () => {
                      leftIcon={<IconX />}
                      variants="outline"
                      onClick={() => setSearch('')}
-                     className="sm:w-auto w-full"
+                     className="w-full sm:w-auto"
                   >
                      Reset
                   </Button>
@@ -208,7 +217,14 @@ const Users: NextPageWithLayout = () => {
 };
 
 Users.getLayout = (page) => {
-   return <AdminLayout>{page}</AdminLayout>;
+   return (
+      <AdminLayout
+         title="Admin | Users"
+         description="Manage users, block, unblock, view user"
+      >
+         {page}
+      </AdminLayout>
+   );
 };
 
 export const getServerSideProps = withRoute({
