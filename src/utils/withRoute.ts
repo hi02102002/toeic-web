@@ -57,15 +57,17 @@ export const withRoute: WithRoute = (options) => (gssp) => async (ctx) => {
       return handleNavigateLogin();
    }
 
-   const user = await http_server<TUser>(
-      {
-         accessToken: access_token as string,
-         refreshToken: refresh_token as string,
-      },
-      '/auth/me'
-   )
-      .then((r) => r?.data)
-      .catch(() => null);
+   const user = ROUTES_AUTH.some((r) => ctx.resolvedUrl.includes(r))
+      ? null
+      : await http_server<TUser>(
+           {
+              accessToken: access_token as string,
+              refreshToken: refresh_token as string,
+           },
+           '/auth/me'
+        )
+           .then((r) => r?.data)
+           .catch(() => null);
 
    if (!user && options?.isProtected) {
       return handleNavigateLogin();

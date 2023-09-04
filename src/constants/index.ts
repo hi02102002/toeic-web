@@ -8,6 +8,7 @@ export const ROUTES = {
    REGISTER: '/register',
    FORGOT_PASSWORD: '/forgot-password',
    RESET_PASSWORD: '/reset-password',
+   VERIFY_ACCOUNT: '/verify-account',
    PROFILE: '/profile',
    NOT_FOUND: '/404',
    SERVER_ERROR: '/500',
@@ -39,6 +40,7 @@ export const ROUTES_AUTH = [
    ROUTES.REGISTER,
    ROUTES.FORGOT_PASSWORD,
    ROUTES.RESET_PASSWORD,
+   ROUTES.VERIFY_ACCOUNT,
 ];
 
 export const NUMBER_QUESTIONS_PART: Record<keyof typeof PartType, number> = {

@@ -1,3 +1,4 @@
+import ResendMail from '@/components/app/modal/resend-mail';
 import {
    Button,
    Form,
@@ -8,9 +9,10 @@ import {
    FormMessage,
    Input,
    Link,
+   LoadingFullPage,
 } from '@/components/shared';
 import { ROUTES } from '@/constants';
-import { useResetPassword } from '@/hooks';
+import { useRequestResetPassword, useResetPassword } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconBrandTether } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
@@ -44,6 +46,10 @@ const ResetPassword = () => {
       mutateAsync: handleResetPassword,
       isLoading: isLoadingResetPassword,
    } = useResetPassword();
+   const {
+      mutateAsync: handleRequestResetPassword,
+      isLoading: isLoadingRequestResetPassword,
+   } = useRequestResetPassword();
 
    const onSubmit = async (values: FormValues) => {
       if (!router.query.token) {
@@ -138,17 +144,31 @@ const ResetPassword = () => {
                      >
                         Back to login
                      </Button>
-                     <Link
-                        href={ROUTES.FORGOT_PASSWORD}
-                        className="text-center"
+                     <ResendMail
+                        title="Resend email verification"
+                        description="Enter your email below to receive a new reset password link."
+                        onSubmit={async ({ values, onClose }) => {
+                           await handleRequestResetPassword(values.email);
+                           onClose?.();
+                        }}
                      >
-                        Didt receive the email? Check your spam filter, or back
-                        to request another.
-                     </Link>
+                        <div>
+                           <Link className="text-center w-full">
+                              Did&apos;t receive the email? Check your spam
+                              filter, or back to request another.
+                           </Link>
+                        </div>
+                     </ResendMail>
                   </form>
                </Form>
             </div>
          </div>
+         {isLoadingRequestResetPassword && (
+            <LoadingFullPage
+               className="backdrop-blur-sm z-[10000] fixed inset-0 bg-transparent"
+               classNameLoading="text-primary"
+            />
+         )}
       </div>
    );
 };

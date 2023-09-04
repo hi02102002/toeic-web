@@ -59,6 +59,14 @@ export class AuthService {
    }): Promise<TBaseResponse<null>> {
       return http.post('/auth/reset-password', data);
    }
+
+   verifyAccount(code: number): Promise<TBaseResponse<null>> {
+      return http.post('/auth/verify-account', { code });
+   }
+
+   requestVerifyAccount(email: string): Promise<TBaseResponse<null>> {
+      return http.post('/auth/request-verify-account', { email });
+   }
 }
 
 export const authService = new AuthService();

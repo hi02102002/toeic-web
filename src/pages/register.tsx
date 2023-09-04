@@ -57,8 +57,9 @@ const Register = () => {
          setIsLoading(true);
          await authService.register(values);
          toast.success('Register success');
+         window.localStorage.setItem('email', values.email);
          setIsLoading(false);
-         router.push(ROUTES.LOGIN);
+         router.push(ROUTES.VERIFY_ACCOUNT);
       } catch (error: any) {
          toast.error(error?.response?.data?.message || 'Something went wrong');
          setIsLoading(false);

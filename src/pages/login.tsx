@@ -56,21 +56,29 @@ const Login = () => {
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
    const handelLogin = async (values: FormValues) => {
+      window.localStorage.setItem('email', values.email);
       try {
-         const prevPath = getCookie('prevPath');
+         let prevPath = (getCookie('prevPath') as string) || ROUTES.DASHBOARD;
+
+         prevPath =
+            prevPath === ROUTES.VERIFY_ACCOUNT ? ROUTES.DASHBOARD : prevPath;
 
          setIsLoading(true);
 
          const { message } = await authService.login(values);
          toast.success(message);
          setIsLoading(false);
-         router.push((prevPath as string) || ROUTES.DASHBOARD);
+         router.push(prevPath);
       } catch (error: any) {
+         console.log(error);
          toast.error(
             error?.response?.data?.message ||
                'Something went wrong. Please try again.'
          );
          setIsLoading(false);
+         if (error?.response.data?.error === 'EMAIL_VERIFY') {
+            router.push(ROUTES.VERIFY_ACCOUNT);
+         }
       }
    };
 

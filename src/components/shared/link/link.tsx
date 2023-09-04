@@ -4,18 +4,28 @@ import React from 'react';
 import { tv } from 'tailwind-variants';
 
 const link = tv({
-   base: 'underline underline-offset-4 text-muted-foreground inline-block',
+   base: 'underline underline-offset-4 text-muted-foreground inline-block cursor-pointer',
 });
 
 type Props = {
    className?: string;
    children: React.ReactNode;
-} & LinkProps;
+   href?: string;
+} & Omit<LinkProps, 'href'>;
 
-export const Link = ({ className, children, ...props }: Props) => {
+export const Link = ({ className, children, href, ...props }: Props) => {
+   console.log('href', href);
+   if (href) {
+      return (
+         <NLink {...props} className={cn(link(), className)} href={href}>
+            {children}
+         </NLink>
+      );
+   }
+
    return (
-      <NLink {...props} className={cn(link(), className)}>
+      <span {...props} className={cn(link(), className)}>
          {children}
-      </NLink>
+      </span>
    );
 };

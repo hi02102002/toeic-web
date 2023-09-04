@@ -39,7 +39,8 @@ export const UserProvider = ({
    const handelFetchUser = useCallback(async () => {
       if (
          initUser === undefined &&
-         !ROUTES_AUTH.some((r) => router.pathname.includes(r))
+         !ROUTES_AUTH.some((r) => router.pathname.includes(r)) &&
+         !(router.pathname === '/404')
       ) {
          try {
             setIsLoading(true);
