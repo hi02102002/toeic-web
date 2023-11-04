@@ -12,7 +12,7 @@ This is a web application for learning English specifically for TOEIC test. Here
 -  Blog: Read and share knowledge about English.
 -  User: Register, login, logout, change password, change profile, ...
 -  Admin: Manage users, manage vocabulary, manage grammar, manage toeic test,
--  Multi-language: English, Vietnamese
+
 
 ## 3. Technologies
 
